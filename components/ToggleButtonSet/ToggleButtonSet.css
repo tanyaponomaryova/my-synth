@@ -1,0 +1,20 @@
+.ToggleButtonSet {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: fit-content;
+}
+
+.ToggleButtonSet .title {
+  margin-bottom: 11px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.ToggleButtonSet > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}

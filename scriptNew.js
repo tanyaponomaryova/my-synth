@@ -1,0 +1,801 @@
+// #region ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// Привязка ползунка: ставит начальное значение, применяет его и слушает input.
+// Принимает id или сам элемент. onChange получает уже число.
+function bindSlider(idOrElement, initialValue, onChange) {
+  const slider =
+    typeof idOrElement === 'string'
+      ? document.getElementById(idOrElement)
+      : idOrElement;
+  if (!slider) {
+    console.warn('Ползунок не найден:', idOrElement);
+    return;
+  }
+  slider.value = initialValue;
+  onChange(initialValue);
+  slider.addEventListener('input', (e) => onChange(Number(e.target.value)));
+}
+
+// Создаёт Part с зацикливанием по нотам из synth.sequence
+function startPart(synth, callback) {
+  const part = new Tone.Part(callback, synth.sequence).start(0);
+  part.loopEnd = synth.loop;
+  part.loop = true;
+  return part;
+}
+// #endregion
+
+// #region Общие настройки микшера
+const master = {
+  volume: 0, // громкость в dB: 0 = без ослабления
+  node: null,
+};
+
+const globalSettings = {
+  bpm: 120,
+};
+
+function initMaster() {
+  master.node = new Tone.Volume(master.volume).toDestination();
+}
+
+function initMasterUI() {
+  bindSlider('bpmSlider', globalSettings.bpm, (v) => {
+    globalSettings.bpm = v;
+    Tone.getTransport().bpm.value = v;
+  });
+
+  bindSlider('masterVolume', master.volume, (v) => {
+    master.node.volume.value = v;
+  });
+}
+// #endregion Общие настройки микшера
+
+// #region DRUM SAMPLER
+const drums = {
+  steps: 16,
+  subdivision: '16n',
+  velocity: 1,
+  // node -- ссылка на объект Tone.js, создаётся в initDrums
+  // row -- ряд секвенсора в HTML, находится в initDrums
+  tracks: {
+    kick: {
+      sampler: {
+        urls: { C2: 'percs-bundle-clean-shake.wav' },
+        baseUrl: 'samples/',
+        node: null,
+      },
+      channel: {
+        volume: -100,
+        pan: 0,
+        mute: false,
+        solo: false,
+        node: null,
+      },
+      noteName: 'C2',
+      sliderId: 'kickVolume',
+      row: null,
+    },
+    snare: {
+      sampler: {
+        urls: { C2: 'short-water-drop_C.wav' },
+        baseUrl: 'samples/',
+        node: null,
+      },
+      channel: {
+        volume: -100,
+        pan: 0,
+        mute: false,
+        solo: false,
+        node: null,
+      },
+      pingPongDelay: {
+        wet: 0.2,
+        delayTime: 0.25,
+        maxDelay: 1, // в Tone.js параметр называется maxDelay
+        node: null,
+      },
+      noteName: 'C2',
+      sliderId: 'snareVolume',
+      row: null,
+    },
+    hihat: {
+      sampler: {
+        urls: { C2: 'HT3DA.WAV' },
+        baseUrl: 'samples/roland_tr_909/',
+        node: null,
+      },
+      channel: {
+        volume: -100,
+        pan: 0,
+        mute: false,
+        solo: false,
+        node: null,
+      },
+      noteName: 'C2',
+      sliderId: 'hihatVolume',
+      row: null,
+    },
+    clap: {
+      sampler: {
+        urls: { C2: 'CLOP3.WAV' },
+        baseUrl: 'samples/roland_tr_909/',
+        node: null,
+      },
+      channel: {
+        volume: -100,
+        pan: 0,
+        mute: false,
+        solo: false,
+        node: null,
+      },
+      noteName: 'C2',
+      sliderId: 'clapVolume',
+      row: null,
+    },
+  },
+};
+
+function initDrums() {
+  const tracks = Object.entries(drums.tracks);
+
+  tracks.forEach(([name, track]) => {
+    track.sampler.node = new Tone.Sampler(track.sampler);
+    track.channel.node = new Tone.Channel(track.channel).connect(master.node);
+    if (track.pingPongDelay) {
+      track.pingPongDelay.node = new Tone.PingPongDelay(track.pingPongDelay);
+
+      track.sampler.node.chain(track.pingPongDelay.node, track.channel.node);
+    } else {
+      track.sampler.node.chain(track.channel.node);
+    }
+
+    track.row = document.querySelector(`.SequencerRow[data-track="${name}"]`);
+  });
+
+  const stepIndexes = [...Array(drums.steps).keys()];
+
+  new Tone.Sequence(
+    (time, step) => {
+      tracks.forEach(([, track]) => {
+        if (track.row.children[step].classList.contains('active')) {
+          // сэмпл проигрывается целиком, поэтому triggerAttack без release
+          track.sampler.node.triggerAttack(
+            track.noteName,
+            time,
+            drums.velocity
+          );
+        }
+      });
+      // визуальные изменения синхронизируем с аудио-временем
+      Tone.getDraw().schedule(() => highlightStep(step), time);
+    },
+    stepIndexes,
+    drums.subdivision
+  ).start(0);
+}
+
+function initDrumsUI() {
+  // клики по кнопкам секвенсора (делегирование)
+  document.querySelector('.Sequencer').addEventListener('click', (e) => {
+    const button = e.target.closest('.ToggleButton');
+    if (button) button.classList.toggle('active');
+  });
+
+  // громкость каждой дорожки
+  Object.values(drums.tracks).forEach((track) => {
+    bindSlider(track.sliderId, track.channel.volume, (v) => {
+      track.channel.node.volume.value = v;
+    });
+  });
+}
+
+let lastStep = null;
+
+function highlightStep(step) {
+  Object.values(drums.tracks).forEach((track) => {
+    const buttons = track.row.querySelectorAll('.ToggleButton');
+
+    // убрать предыдущий highlight
+    if (lastStep !== null) {
+      buttons[lastStep].classList.remove('playing');
+    }
+
+    // добавить новый
+    buttons[step].classList.add('playing');
+  });
+
+  lastStep = step;
+}
+// #endregion
+
+// #region ОБЩЕЕ ДЛЯ ВСЕХ СИНТОВ
+// Настройки общих эффектов.
+// Ползунок эффекта (0..1) у каждого синта хранится в synth.amount и управляет
+// самым заметным параметром эффекта, а не wet:
+//   tremolo -> depth (глубина «качания» громкости)
+//   delay   -> feedback (сколько повторов) + wet включается, если ползунок > 0
+//   reverb  -> decay (длина хвоста, сек) + wet включается, если ползунок > 0
+// wet ниже -- фиксированная «громкость эффекта», когда он включён.
+const commonFx = {
+  tremolo: { frequency: 4, depth: 0.6, wet: 1 },
+  pingPongDelay: { delayTime: '8n', feedback: 0.3, maxDelay: 2, wet: 0.5 },
+  reverb: { decay: 3, preDelay: 0.02, wet: 0.6 },
+};
+
+// Как значение ползунка 0..1 превращается в параметр эффекта
+const fxRange = {
+  delayFeedback: (v) => v * 0.9, // 0.9 максимум, дальше начинается самовозбуд
+  reverbDecay: (v) => 0.5 + v * 7.5, // от 0.5 до 8 секунд
+};
+
+// Подключает к концу внутренней цепочки синта общие эффекты и канал:
+//   lastNode -> tremolo -> pingPongDelay -> reverb -> channel -> master
+async function connectCommonFx(synth, lastNode) {
+  synth.fx = {
+    tremolo: new Tone.Tremolo({
+      ...commonFx.tremolo,
+      depth: synth.amount.tremolo,
+    }).start(),
+    pingPongDelay: new Tone.PingPongDelay({
+      ...commonFx.pingPongDelay,
+      feedback: fxRange.delayFeedback(synth.amount.pingPongDelay),
+      wet: synth.amount.pingPongDelay > 0 ? commonFx.pingPongDelay.wet : 0,
+    }),
+    reverb: new Tone.Reverb({
+      ...commonFx.reverb,
+      decay: fxRange.reverbDecay(synth.amount.reverb),
+      wet: synth.amount.reverb > 0 ? commonFx.reverb.wet : 0,
+    }),
+  };
+  synth.channel.node = new Tone.Channel(synth.channel).connect(master.node);
+
+  lastNode.chain(
+    synth.fx.tremolo,
+    synth.fx.pingPongDelay,
+    synth.fx.reverb,
+    synth.channel.node
+  );
+
+  await synth.fx.reverb.ready; // Reverb генерирует импульс асинхронно
+}
+
+// Что умеют ползунки с data-param="...":
+//   get(synth)    -- стартовое значение из конфига синта
+//   set(synth, v) -- применить значение к созданным узлам
+// Чтобы добавить новый параметр, достаточно дописать сюда одну строку.
+const synthParams = {
+  // общие
+  volume: {
+    get: (s) => s.channel.volume,
+    set: (s, v) => (s.channel.node.volume.value = v),
+  },
+  // tremolo: ползунок = глубина качания громкости
+  tremolo: {
+    get: (s) => s.amount.tremolo,
+    set: (s, v) => (s.fx.tremolo.depth.value = v),
+  },
+  // delay: ползунок = feedback (число повторов); на 0 эффект полностью выключен
+  delay: {
+    get: (s) => s.amount.pingPongDelay,
+    set: (s, v) => {
+      s.fx.pingPongDelay.feedback.value = fxRange.delayFeedback(v);
+      s.fx.pingPongDelay.wet.value = v > 0 ? commonFx.pingPongDelay.wet : 0;
+    },
+  },
+  // reverb: ползунок = длина хвоста (decay); на 0 эффект полностью выключен.
+  // Смена decay заново генерирует импульс, поэтому делаем это с задержкой,
+  // чтобы не пересчитывать его на каждый пиксель движения ползунка.
+  reverb: {
+    get: (s) => s.amount.reverb,
+    set: (s, v) => {
+      s.fx.reverb.wet.value = v > 0 ? commonFx.reverb.wet : 0;
+      clearTimeout(s.reverbTimer);
+      if (v > 0) {
+        s.reverbTimer = setTimeout(() => {
+          s.fx.reverb.decay = fxRange.reverbDecay(v);
+        }, 120);
+      }
+    },
+  },
+  // внутренние (есть только у некоторых синтов)
+  phaser: {
+    get: (s) => s.phaser?.frequency, // у synth2/3 фазера нет -> undefined
+    set: (s, v) => {
+      if (s.phaser?.node) s.phaser.node.frequency.value = v;
+    },
+  },
+};
+
+// Один UI для всех синтов. Ищет в HTML:
+//   <input type="range" data-synth="synth1" data-param="volume">
+//   <div data-synth="synth1" data-param="oscillator"> ...кнопки... </div>
+function initSynthsUI() {
+  // ползунки
+  document
+    .querySelectorAll('input[data-synth][data-param]')
+    .forEach((slider) => {
+      const synth = synths[slider.dataset.synth];
+      const param = synthParams[slider.dataset.param];
+
+      if (!synth || !param) {
+        console.warn('Неизвестный data-synth / data-param:', slider);
+        return;
+      }
+      const initial = param.get(synth);
+      if (initial === undefined) {
+        console.warn('У синта нет такого параметра:', slider);
+        return;
+      }
+      bindSlider(slider, initial, (v) => param.set(synth, v));
+    });
+
+  // выбор осциллятора (у NoiseSynth его нет -- такие группы пропускаем)
+  document.querySelectorAll('[data-param="oscillator"]').forEach((group) => {
+    const synth = synths[group.dataset.synth];
+    if (!synth || !synth.synth.node.oscillator) return;
+
+    const buttons = group.querySelectorAll('.ToggleButton');
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        synth.synth.node.oscillator.type = button.dataset.type;
+        buttons.forEach((b) => b.classList.remove('active'));
+        button.classList.add('active');
+      });
+    });
+  });
+}
+// #endregion
+
+// #region SYNTH 1
+const synth1 = {
+  synth: {
+    oscillator: {
+      type: 'sine',
+    },
+    envelope: {
+      attack: 0.005,
+      decay: 0.2,
+      sustain: 0.3,
+      release: 1,
+    },
+    node: null,
+  },
+  // внутренний эффект (только у этого синта)
+  phaser: {
+    frequency: 0,
+    octaves: 1,
+    baseFrequency: 1000,
+    node: null,
+  },
+  // стартовое положение ползунков общих эффектов (0 = выключен, 1 = максимум)
+  amount: {
+    tremolo: 0,
+    pingPongDelay: 0.2,
+    reverb: 0,
+  },
+  channel: {
+    volume: -100,
+    node: null,
+  },
+  sequence: [
+    {
+      time: '0:0:2',
+      noteName: 'G5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '0:1:0',
+      noteName: 'A5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '0:2:0',
+      noteName: 'A5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '0:2:2',
+      noteName: 'A5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '0:3:2',
+      noteName: 'B5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:0:0',
+      noteName: 'G5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:1:0',
+      noteName: 'A5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:2:0',
+      noteName: 'A5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:3:0',
+      noteName: 'G5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:3:2',
+      noteName: 'B5',
+      duration: '8n',
+      velocity: 1,
+    },
+  ],
+  loop: '2m',
+};
+
+async function initSynth1() {
+  // внутренняя часть: синт -> phaser
+  synth1.synth.node = new Tone.Synth(synth1.synth);
+  synth1.phaser.node = new Tone.Phaser(synth1.phaser);
+  synth1.synth.node.connect(synth1.phaser.node);
+
+  // общая часть: tremolo -> pingPongDelay -> reverb -> channel -> master
+  await connectCommonFx(synth1, synth1.phaser.node);
+
+  startPart(synth1, (time, note) => {
+    synth1.synth.node.triggerAttackRelease(
+      note.noteName,
+      note.duration,
+      time,
+      note.velocity
+    );
+  });
+}
+
+// #endregion SYNTH 1
+
+// #region SYNTH 2
+const synth2 = {
+  // Если нужно ярче и «стеклянней»,
+  // поднимите modulationIndex до 4–5 и частоту фильтра до 5000.
+  // Если ещё мягче и теплее, опустите modulationIndex до 1.5
+  // и фильтр до 2200. Чтобы больше «воды», увеличьте
+  // decay реверба (commonFx.reverb.decay) до 4 и wet эха до 0.35.
+  synth: {
+    harmonicity: 3.99,
+    modulationIndex: 1.5,
+    oscillator: {
+      type: 'sine',
+    },
+    envelope: {
+      attack: 0.002,
+      decay: 0.9,
+      sustain: 0,
+      release: 0.9,
+    },
+    modulation: {
+      type: 'sine',
+    },
+    modulationEnvelope: {
+      attack: 0.002,
+      decay: 0.15,
+      sustain: 0,
+      release: 0.2,
+    },
+    node: null,
+  },
+  // внутренние эффекты (только у этого синта)
+  filter: {
+    type: 'lowpass',
+    frequency: 2200,
+    Q: 0.5,
+    node: null,
+  },
+  chorus: {
+    frequency: 1,
+    delayTime: 10,
+    depth: 0.25,
+    wet: 0.35,
+    node: null,
+  },
+  amount: {
+    tremolo: 0,
+    pingPongDelay: 0,
+    reverb: 0.2,
+  },
+  channel: {
+    volume: -100,
+    node: null,
+  },
+  sequence: [
+    {
+      time: '0:1:0',
+      noteName: 'D5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '0:1:2',
+      noteName: 'E5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '0:2:2',
+      noteName: 'D5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '0:3:0',
+      noteName: 'C5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:0:2',
+      noteName: 'E5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:1:2',
+      noteName: 'C5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:2:0',
+      noteName: 'A4',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:3:0',
+      noteName: 'G5',
+      duration: '8n',
+      velocity: 1,
+    },
+    {
+      time: '1:3:2',
+      noteName: 'A5',
+      duration: '8n',
+      velocity: 1,
+    },
+  ],
+  loop: '2m',
+};
+
+async function initSynth2() {
+  // внутренняя часть: синт -> filter -> chorus
+  synth2.synth.node = new Tone.AMSynth(synth2.synth);
+  synth2.filter.node = new Tone.Filter(synth2.filter);
+  synth2.chorus.node = new Tone.Chorus(synth2.chorus).start();
+  synth2.synth.node.chain(synth2.filter.node, synth2.chorus.node);
+
+  // общая часть
+  await connectCommonFx(synth2, synth2.chorus.node);
+
+  startPart(synth2, (time, note) => {
+    synth2.synth.node.triggerAttackRelease(
+      note.noteName,
+      note.duration,
+      time,
+      note.velocity
+    );
+  });
+}
+
+// #endregion SYNTH 2
+
+// #region SYNTH 3
+const synth3 = {
+  // Подсказки по настройке:
+  // - Чтобы мелодия была слышна чётче, поднимите bandpass.Q до 10–14
+  //   (шум станет «свистящим», менее водяным).
+  // - Чтобы было больше «шума» и меньше мелодии, опустите Q до 2–3.
+  // - Чтобы пена шуршала сильнее, поднимите foam.volume до -24.
+  // - Чтобы волны качались медленнее и глубже, tremolo1: commonFx.tremolo.frequency 0.1.
+  // - Ещё бархатнее: lowpass.frequency 1200.
+  synth: {
+    harmonicity: 3.99,
+    modulationIndex: 1.5,
+    oscillator: {
+      type: 'sine',
+    },
+    envelope: {
+      attack: 0.002,
+      decay: 0.9,
+      sustain: 0,
+      release: 0.9,
+    },
+    modulation: {
+      type: 'sine',
+    },
+    modulationEnvelope: {
+      attack: 0.002,
+      decay: 0.15,
+      sustain: 0,
+      release: 0.2,
+    },
+    node: null,
+  },
+  // узкий фильтр, который настраивается на ноту — отвечает за мелодию
+  bandpass: {
+    type: 'bandpass',
+    frequency: 440,
+    Q: 2,
+    rolloff: -12,
+    node: null,
+  },
+  // бархат: срезаем всё острое
+  lowpass: {
+    type: 'lowpass',
+    frequency: 1800,
+    Q: 0.3,
+    rolloff: -24,
+    node: null,
+  },
+  chorus: {
+    frequency: 0.6,
+    delayTime: 18,
+    depth: 0.6,
+    wet: 0.45,
+    node: null,
+  },
+
+  // tremolo и reverb теперь общие (connectCommonFx), здесь только стартовое положение их ползунков (amount)
+  amount: {
+    tremolo: 0.5, // медленные «волны» — громкость плавно качается
+    pingPongDelay: 0,
+    reverb: 0.45,
+  },
+  channel: {
+    volume: -100,
+    node: null,
+  },
+  // скольжение фильтра между нотами (сек) — чем больше, тем «водянистее»
+  glide: 0.08,
+  sequence: [
+    {
+      time: '0:0:0',
+      noteName: 'D4',
+      duration: '2n',
+      velocity: 1,
+    },
+    {
+      time: '0:2:0',
+      noteName: 'F4',
+      duration: '2n',
+      velocity: 1,
+    },
+    {
+      time: '1:0:0',
+      noteName: 'A4',
+      duration: '2n',
+      velocity: 1,
+    },
+    {
+      time: '2:0:0',
+      noteName: 'G4',
+      duration: '2n',
+      velocity: 1,
+    },
+    {
+      time: '2:2:0',
+      noteName: 'E4',
+      duration: '2n',
+      velocity: 1,
+    },
+    {
+      time: '3:0:0',
+      noteName: 'D4',
+      duration: '1m',
+      velocity: 1,
+    },
+  ],
+  loop: '4m',
+};
+
+async function initSynth3() {
+  // внутренняя часть: синт -> bandpass -> lowpass -> chorus
+  synth3.synth.node = new Tone.Synth(synth3.synth);
+  synth3.bandpass.node = new Tone.Filter(synth3.bandpass);
+  synth3.lowpass.node = new Tone.Filter(synth3.lowpass);
+  synth3.chorus.node = new Tone.Chorus(synth3.chorus).start();
+  synth3.synth.node.chain(
+    synth3.bandpass.node,
+    synth3.lowpass.node,
+    synth3.chorus.node
+  );
+
+  // общая часть
+  await connectCommonFx(synth3, synth3.chorus.node);
+
+  // мелодия: настраиваем фильтр на ноту, затем запускаем шум
+  startPart(synth3, (time, note) => {
+    synth3.synth.node.triggerAttackRelease(
+      note.noteName,
+      note.duration,
+      time,
+      note.velocity
+    );
+  });
+}
+
+// #endregion SYNTH 3
+
+// реестр: по нему data-synth="synth1" находит объект синта
+const synths = { synth1, synth2, synth3 };
+
+// #region СТАРТ / PLAY / PAUSE
+let initialized = false;
+
+async function initAll() {
+  initMaster();
+
+  initDrums();
+
+  await Promise.all([initSynth1(), initSynth2(), initSynth3()]);
+
+  // UI подключаем, когда все узлы уже созданы
+  initMasterUI();
+  initDrumsUI();
+  initSynthsUI();
+
+  await Tone.loaded(); // ждём загрузки сэмплов
+}
+
+function setPlayButtonText(button, isPlaying) {
+  button.textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const playButton = document.getElementById('startButton');
+  const stopButton = document.getElementById('stopButton'); // необязательная
+  const transport = Tone.getTransport();
+
+  setPlayButtonText(playButton, false);
+
+  playButton.addEventListener('click', async () => {
+    await Tone.start(); // обязательно внутри клика пользователя
+
+    // первая загрузка -- один раз
+    if (!initialized) {
+      initialized = true;
+      playButton.disabled = true;
+      await initAll();
+      playButton.disabled = false;
+    }
+
+    if (transport.state === 'started') {
+      transport.pause();
+      setPlayButtonText(playButton, false);
+    } else {
+      transport.start();
+      setPlayButtonText(playButton, true);
+    }
+  });
+
+  // кнопка Stop: сброс на начало и снятие подсветки
+  if (stopButton) {
+    stopButton.addEventListener('click', () => {
+      transport.stop();
+      document
+        .querySelectorAll('.playing')
+        .forEach((el) => el.classList.remove('playing'));
+      lastStep = null;
+      setPlayButtonText(playButton, false);
+    });
+  }
+});
+// #endregion

@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Synth Controls And Examples</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+
+  <body class="index">
+    <div class="Button" id="startButton">Start</div>
+
+    <!-- BPM-->
+    <div class="Slider" id="bpmSlider">
+      <div class="title">BPM</div>
+      <input type="range" min="40" max="200" step="1" value="120" />
+    </div>
+
+    <!-- ОБЩАЯ ГРОМКОСТЬ-->
+    <div class="Slider" id="masterVolume">
+      <div class="title">ОБЩАЯ ГРОМКОСТЬ</div>
+      <input type="range" min="-40" max="20" step="1" value="0" />
+    </div>
+
+    <div
+      id="bubble-zone"
+      style="width: 600px; height: 400px; background-color: rgb(0, 115, 255)"
+    >
+      <!-- <button style="position: relative; z-index: 1">Кнопка</button> -->
+    </div>
+
+    <br />
+    <hr />
+    <br />
+
+    <main class="Machine">
+      <div class="Controls">
+        <div class="Mixer">
+          <div class="MixerRow" data-track="kick">
+            <div class="Slider" id="kickVolume">
+              <div class="title">Kick</div>
+              <input type="range" min="-100" max="6" step="1" value="-100" />
+            </div>
+          </div>
+          <div class="MixerRow" data-track="snare">
+            <div class="Slider" id="snareVolume">
+              <div class="title">Snare</div>
+              <input type="range" min="-100" max="6" step="1" value="-100" />
+            </div>
+          </div>
+          <div class="MixerRow" data-track="hihat">
+            <div class="Slider" id="hihatVolume">
+              <div class="title">Hi-hat</div>
+              <input type="range" min="-100" max="6" step="1" value="-100" />
+            </div>
+          </div>
+          <div class="MixerRow" data-track="clap">
+            <div class="Slider" id="clapVolume">
+              <div class="title">Clap</div>
+              <input type="range" min="-100" max="6" step="1" value="-100" />
+            </div>
+          </div>
+        </div>
+
+        <div class="Sequencer">
+          <div class="SequencerRow" data-track="kick">
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+          </div>
+
+          <div class="SequencerRow" data-track="snare">
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+          </div>
+
+          <div class="SequencerRow" data-track="hihat">
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+          </div>
+
+          <div class="SequencerRow" data-track="clap">
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton"></div>
+            <div class="ToggleButton active"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <br />
+    <hr />
+    <br />
+
+    <div class="Slider">
+      <div class="title">Synth 1 Volume</div>
+      <input
+        type="range"
+        data-synth="synth1"
+        data-param="volume"
+        min="-100"
+        max="6"
+        step="1"
+      />
+    </div>
+
+    <div class="ToggleButtonSet">
+      <div class="title">Oscillator</div>
+
+      <div data-synth="synth1" data-param="oscillator">
+        <div class="ToggleButton active" data-type="sine">sine</div>
+        <div class="ToggleButton" data-type="square">square</div>
+        <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
+        <div class="ToggleButton" data-type="triangle">triangle</div>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="Slider" data-synth="synth1" data-param="tremolo">
+      <div class="title">tremolo</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+
+    <div class="Slider" data-synth="synth1" data-param="delay">
+      <div class="title">delay</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+
+    <div class="Slider" data-synth="synth1" data-param="reverb">
+      <div class="title">reverb</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+
+    <br />
+    <hr />
+    <br />
+
+    <div class="Slider">
+      <div class="title">Synth 2 Volume</div>
+      <input
+        type="range"
+        data-synth="synth2"
+        data-param="volume"
+        min="-100"
+        max="6"
+        step="1"
+      />
+    </div>
+
+    <div class="ToggleButtonSet">
+      <div class="title">Oscillator</div>
+
+      <div data-synth="synth2" data-param="oscillator">
+        <div class="ToggleButton active" data-type="sine">sine</div>
+        <div class="ToggleButton" data-type="square">square</div>
+        <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
+        <div class="ToggleButton" data-type="triangle">triangle</div>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="Slider" data-synth="synth2" data-param="tremolo">
+      <div class="title">tremolo</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+
+    <div class="Slider" data-synth="synth2" data-param="delay">
+      <div class="title">delay</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+
+    <div class="Slider" data-synth="synth2" data-param="reverb">
+      <div class="title">reverb</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+
+    <br />
+    <hr />
+    <br />
+
+    <div class="Slider">
+      <div class="title">Synth 3 Volume</div>
+      <input
+        type="range"
+        data-synth="synth3"
+        data-param="volume"
+        min="-100"
+        max="6"
+        step="1"
+      />
+    </div>
+
+    <div class="ToggleButtonSet">
+      <div class="title">Oscillator</div>
+
+      <div data-synth="synth3" data-param="oscillator">
+        <div class="ToggleButton active" data-type="sine">sine</div>
+        <div class="ToggleButton" data-type="square">square</div>
+        <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
+        <div class="ToggleButton" data-type="triangle">triangle</div>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="Slider" data-synth="synth3" data-param="tremolo">
+      <div class="title">tremolo</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+
+    <div class="Slider" data-synth="synth3" data-param="delay">
+      <div class="title">delay</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+
+    <div class="Slider" data-synth="synth3" data-param="reverb">
+      <div class="title">reverb</div>
+      <input type="range" min="0" max="1" step="0.01" />
+    </div>
+  </body>
+
+  <script src="https://unpkg.com/tone@15.0.4/build/Tone.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.3/lib/p5.min.js"></script>
+  <!-- <script type="module" src="script.js"></script> -->
+  <script type="module" src="scriptNew.js"></script>
+  <script src="bubbleBath.js"></script>
+</html>
