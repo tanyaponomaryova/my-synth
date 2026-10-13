@@ -317,16 +317,31 @@ function initSynthsUI() {
       const synth = synths[slider.dataset.synth];
       const param = synthParams[slider.dataset.param];
 
+      console.log(slider.dataset.synth, slider.dataset.param);
+
       if (!synth || !param) {
         console.warn('Неизвестный data-synth / data-param:', slider);
         return;
       }
+
       const initial = param.get(synth);
       if (initial === undefined) {
         console.warn('У синта нет такого параметра:', slider);
         return;
       }
-      bindSlider(slider, initial, (v) => param.set(synth, v));
+
+      bindSlider(slider, initial, (v) => {
+        console.log(
+          '\n onChange \nсинт:',
+          slider.dataset.synth,
+          '\n параметр:',
+          slider.dataset.param,
+          '\n значение:',
+          v
+        );
+
+        param.set(synth, v);
+      });
     });
 
   // выбор осциллятора (у NoiseSynth его нет -- такие группы пропускаем)
@@ -337,6 +352,15 @@ function initSynthsUI() {
     const buttons = group.querySelectorAll('.ToggleButton');
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
+        console.log(
+          'click \n синт:',
+          group.dataset.synth,
+          '\n параметр:',
+          group.dataset.param,
+          '\n тип: ',
+          button.dataset.type
+        );
+
         synth.synth.node.oscillator.type = button.dataset.type;
         buttons.forEach((b) => b.classList.remove('active'));
         button.classList.add('active');
