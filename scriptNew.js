@@ -298,12 +298,12 @@ const synthParams = {
     },
   },
   // внутренние (есть только у некоторых синтов)
-  phaser: {
-    get: (s) => s.phaser?.frequency, // у synth2/3 фазера нет -> undefined
-    set: (s, v) => {
-      if (s.phaser?.node) s.phaser.node.frequency.value = v;
-    },
-  },
+  //   phaser: {
+  //     get: (s) => s.phaser?.frequency, // у synth2/3 фазера нет -> undefined
+  //     set: (s, v) => {
+  //       if (s.phaser?.node) s.phaser.node.frequency.value = v;
+  //     },
+  //   },
 };
 
 // Один UI для всех синтов. Ищет в HTML:
@@ -631,25 +631,20 @@ const synth3 = {
   // - Чтобы волны качались медленнее и глубже, tremolo1: commonFx.tremolo.frequency 0.1.
   // - Ещё бархатнее: lowpass.frequency 1200.
   synth: {
-    harmonicity: 3.99,
-    modulationIndex: 1.5,
-    oscillator: {
-      type: 'sine',
-    },
-    envelope: {
-      attack: 0.002,
-      decay: 0.9,
-      sustain: 0,
-      release: 0.9,
-    },
-    modulation: {
-      type: 'sine',
-    },
-    modulationEnvelope: {
-      attack: 0.002,
-      decay: 0.15,
-      sustain: 0,
-      release: 0.2,
+    maxPolyphony: 8, // сколько нот максимум звучит одновременно (по умолчанию 32)
+    voice: Tone.FMSynth, // тип голоса
+    options: {
+      harmonicity: 3.99,
+      modulationIndex: 1.5,
+      oscillator: { type: 'sine' },
+      envelope: { attack: 0.002, decay: 0.9, sustain: 0, release: 0.9 },
+      modulation: { type: 'sine' },
+      modulationEnvelope: {
+        attack: 0.002,
+        decay: 0.15,
+        sustain: 0,
+        release: 0.2,
+      },
     },
     node: null,
   },
@@ -692,47 +687,39 @@ const synth3 = {
   sequence: [
     {
       time: '0:0:0',
-      noteName: 'D4',
+      noteName: ['F#3', 'A3', 'C#4', 'E4', 'G#4'],
       duration: '2n',
       velocity: 1,
     },
     {
       time: '0:2:0',
-      noteName: 'F4',
+      noteName: ['G3', 'B3', 'D4', 'F#4'],
       duration: '2n',
       velocity: 1,
     },
     {
       time: '1:0:0',
-      noteName: 'A4',
+      noteName: ['A3', 'C#4', 'E4', 'B4'],
       duration: '2n',
       velocity: 1,
     },
     {
-      time: '2:0:0',
-      noteName: 'G4',
+      time: '1:2:0',
+      noteName: ['D3', 'F#3', 'A3', 'C#4', 'E4'],
       duration: '2n',
-      velocity: 1,
-    },
-    {
-      time: '2:2:0',
-      noteName: 'E4',
-      duration: '2n',
-      velocity: 1,
-    },
-    {
-      time: '3:0:0',
-      noteName: 'D4',
-      duration: '1m',
       velocity: 1,
     },
   ],
-  loop: '4m',
+  loop: '1m',
 };
 
 async function initSynth3() {
-  // внутренняя часть: синт -> bandpass -> lowpass -> chorus
-  synth3.synth.node = new Tone.Synth(synth3.synth);
+  synth3.synth.node = new Tone.PolySynth({
+    voice: synth3.synth.voice,
+    maxPolyphony: synth3.synth.maxPolyphony,
+    options: synth3.synth.options,
+  });
+
   synth3.bandpass.node = new Tone.Filter(synth3.bandpass);
   synth3.lowpass.node = new Tone.Filter(synth3.lowpass);
   synth3.chorus.node = new Tone.Chorus(synth3.chorus).start();
@@ -748,7 +735,7 @@ async function initSynth3() {
   // мелодия: настраиваем фильтр на ноту, затем запускаем шум
   startPart(synth3, (time, note) => {
     synth3.synth.node.triggerAttackRelease(
-      note.noteName,
+      note.noteName, // строка или массив, PolySynth понимает оба варианта
       note.duration,
       time,
       note.velocity

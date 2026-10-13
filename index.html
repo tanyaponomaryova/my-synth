@@ -8,25 +8,26 @@
   </head>
 
   <body class="index">
-    <div class="Button" id="startButton">Start</div>
-
-    <!-- BPM-->
-    <div class="Slider" id="bpmSlider">
-      <div class="title">BPM</div>
-      <input type="range" min="40" max="200" step="1" value="120" />
-    </div>
-
-    <!-- ОБЩАЯ ГРОМКОСТЬ-->
-    <div class="Slider" id="masterVolume">
-      <div class="title">ОБЩАЯ ГРОМКОСТЬ</div>
-      <input type="range" min="-40" max="20" step="1" value="0" />
-    </div>
-
-    <div
-      id="bubble-zone"
-      style="width: 600px; height: 400px; background-color: rgb(0, 115, 255)"
-    >
-      <!-- <button style="position: relative; z-index: 1">Кнопка</button> -->
+    <div class="horizontalFlex">
+      <div>
+        <div class="Button" id="startButton">Start</div>
+        <!-- BPM-->
+        <div class="Slider" id="bpmSlider">
+          <div class="title">BPM</div>
+          <input type="range" min="40" max="200" step="1" value="120" />
+        </div>
+        <!-- ОБЩАЯ ГРОМКОСТЬ-->
+        <div class="Slider" id="masterVolume">
+          <div class="title">ОБЩАЯ ГРОМКОСТЬ</div>
+          <input type="range" min="-40" max="20" step="1" value="0" />
+        </div>
+      </div>
+      <div
+        id="bubble-zone"
+        style="width: 600px; height: 200px; background-color: rgb(0, 115, 255)"
+      >
+        <!-- <button style="position: relative; z-index: 1">Кнопка</button> -->
+      </div>
     </div>
 
     <br />
@@ -34,7 +35,7 @@
     <br />
 
     <main class="Machine">
-      <div class="Controls">
+      <div class="Controls horizontalFlex">
         <div class="Mixer">
           <div class="MixerRow" data-track="kick">
             <div class="Slider" id="kickVolume">
@@ -146,198 +147,188 @@
     <hr />
     <br />
 
-    <div class="Slider">
-      <div class="title">Synth 1 Volume</div>
-      <input
-        type="range"
-        data-synth="synth1"
-        data-param="volume"
-        min="-100"
-        max="6"
-        step="1"
-      />
-    </div>
-
-    <div class="ToggleButtonSet">
-      <div class="title">Oscillator</div>
-
-      <div data-synth="synth1" data-param="oscillator">
-        <div class="ToggleButton active" data-type="sine">sine</div>
-        <div class="ToggleButton" data-type="square">square</div>
-        <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
-        <div class="ToggleButton" data-type="triangle">triangle</div>
+    <!-- SYNTH 1 2 3 SETTINGS -->
+    <div class="horizontalFlex">
+      <!-- SYNTH 1 -->
+      <div>
+        <div class="Slider">
+          <div class="title">Synth 1 Volume</div>
+          <input
+            type="range"
+            data-synth="synth1"
+            data-param="volume"
+            min="-100"
+            max="6"
+            step="1"
+          />
+        </div>
+        <div class="ToggleButtonSet">
+          <div class="title">Oscillator</div>
+          <div data-synth="synth1" data-param="oscillator">
+            <div class="ToggleButton active" data-type="sine">sine</div>
+            <div class="ToggleButton" data-type="square">square</div>
+            <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
+            <div class="ToggleButton" data-type="triangle">triangle</div>
+          </div>
+        </div>
+        <br />
+        <div class="Slider">
+          <div class="title">tremolo</div>
+          <input
+            type="range"
+            data-synth="synth1"
+            data-param="tremolo"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0"
+          />
+        </div>
+        <div class="Slider">
+          <div class="title">delay</div>
+          <input
+            type="range"
+            data-synth="synth1"
+            data-param="delay"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0"
+          />
+        </div>
+        <div class="Slider">
+          <div class="title">reverb</div>
+          <input
+            type="range"
+            data-synth="synth1"
+            data-param="reverb"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0"
+          />
+        </div>
       </div>
-    </div>
-
-    <br />
-
-    <div class="Slider">
-      <div class="title">tremolo</div>
-      <input
-        type="range"
-        data-synth="synth1"
-        data-param="tremolo"
-        min="0"
-        max="1"
-        step="0.01"
-        value="0"
-      />
-    </div>
-
-    <div class="Slider">
-      <div class="title">delay</div>
-      <input
-        type="range"
-        data-synth="synth1"
-        data-param="delay"
-        min="0"
-        max="1"
-        step="0.01"
-        value="0"
-      />
-    </div>
-
-    <div class="Slider">
-      <div class="title">reverb</div>
-      <input
-        type="range"
-        data-synth="synth1"
-        data-param="reverb"
-        min="0"
-        max="1"
-        step="0.01"
-        value="0"
-      />
-    </div>
-
-    <br />
-    <hr />
-    <br />
-
-    <div class="Slider">
-      <div class="title">Synth 2 Volume</div>
-      <input
-        type="range"
-        data-synth="synth2"
-        data-param="volume"
-        min="-100"
-        max="6"
-        step="1"
-      />
-    </div>
-
-    <div class="ToggleButtonSet">
-      <div class="title">Oscillator</div>
-
-      <div data-synth="synth2" data-param="oscillator">
-        <div class="ToggleButton active" data-type="sine">sine</div>
-        <div class="ToggleButton" data-type="square">square</div>
-        <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
-        <div class="ToggleButton" data-type="triangle">triangle</div>
+      <br />
+      <hr />
+      <br />
+      <!-- SYNTH 2 -->
+      <div>
+        <div class="Slider">
+          <div class="title">Synth 2 Volume</div>
+          <input
+            type="range"
+            data-synth="synth2"
+            data-param="volume"
+            min="-100"
+            max="6"
+            step="1"
+          />
+        </div>
+        <div class="ToggleButtonSet">
+          <div class="title">Oscillator</div>
+          <div data-synth="synth2" data-param="oscillator">
+            <div class="ToggleButton active" data-type="sine">sine</div>
+            <div class="ToggleButton" data-type="square">square</div>
+            <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
+            <div class="ToggleButton" data-type="triangle">triangle</div>
+          </div>
+        </div>
+        <br />
+        <div class="Slider">
+          <div class="title">tremolo</div>
+          <input
+            type="range"
+            data-synth="synth2"
+            data-param="tremolo"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+        </div>
+        <div class="Slider">
+          <div class="title">delay</div>
+          <input
+            type="range"
+            data-synth="synth2"
+            data-param="delay"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+        </div>
+        <div class="Slider">
+          <div class="title">reverb</div>
+          <input
+            type="range"
+            data-synth="synth2"
+            data-param="reverb"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+        </div>
       </div>
-    </div>
-
-    <br />
-
-    <div class="Slider">
-      <div class="title">tremolo</div>
-      <input
-        type="range"
-        data-synth="synth2"
-        data-param="tremolo"
-        min="0"
-        max="1"
-        step="0.01"
-      />
-    </div>
-
-    <div class="Slider">
-      <div class="title">delay</div>
-      <input
-        type="range"
-        data-synth="synth2"
-        data-param="delay"
-        min="0"
-        max="1"
-        step="0.01"
-      />
-    </div>
-
-    <div class="Slider">
-      <div class="title">reverb</div>
-      <input
-        type="range"
-        data-synth="synth2"
-        data-param="reverb"
-        min="0"
-        max="1"
-        step="0.01"
-      />
-    </div>
-
-    <br />
-    <hr />
-    <br />
-
-    <div class="Slider">
-      <div class="title">Synth 3 Volume</div>
-      <input
-        type="range"
-        data-synth="synth3"
-        data-param="volume"
-        min="-100"
-        max="6"
-        step="1"
-      />
-    </div>
-
-    <div class="ToggleButtonSet">
-      <div class="title">Oscillator</div>
-
-      <div data-synth="synth3" data-param="oscillator">
-        <div class="ToggleButton active" data-type="sine">sine</div>
-        <div class="ToggleButton" data-type="square">square</div>
-        <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
-        <div class="ToggleButton" data-type="triangle">triangle</div>
+      <br />
+      <hr />
+      <br />
+      <!-- SYNTH 3 -->
+      <div>
+        <div class="Slider">
+          <div class="title">Synth 3 Volume</div>
+          <input
+            type="range"
+            data-synth="synth3"
+            data-param="volume"
+            min="-100"
+            max="6"
+            step="1"
+          />
+        </div>
+        <div class="ToggleButtonSet">
+          <div class="title">Oscillator</div>
+          <div data-synth="synth3" data-param="oscillator">
+            <div class="ToggleButton active" data-type="sine">sine</div>
+            <div class="ToggleButton" data-type="square">square</div>
+            <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
+            <div class="ToggleButton" data-type="triangle">triangle</div>
+          </div>
+        </div>
+        <br />
+        <div class="Slider">
+          <div class="title">tremolo</div>
+          <input
+            type="range"
+            data-synth="synth3"
+            data-param="tremolo"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+        </div>
+        <div class="Slider">
+          <div class="title">delay</div>
+          <input
+            type="range"
+            data-synth="synth3"
+            data-param="delay"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+        </div>
+        <div class="Slider">
+          <div class="title">reverb</div>
+          <input
+            type="range"
+            data-synth="synth3"
+            data-param="reverb"
+            min="0"
+            max="1"
+            step="0.01"
+          />
+        </div>
       </div>
-    </div>
-
-    <br />
-
-    <div class="Slider">
-      <div class="title">tremolo</div>
-      <input
-        type="range"
-        data-synth="synth3"
-        data-param="tremolo"
-        min="0"
-        max="1"
-        step="0.01"
-      />
-    </div>
-
-    <div class="Slider">
-      <div class="title">delay</div>
-      <input
-        type="range"
-        data-synth="synth3"
-        data-param="delay"
-        min="0"
-        max="1"
-        step="0.01"
-      />
-    </div>
-
-    <div class="Slider">
-      <div class="title">reverb</div>
-      <input
-        type="range"
-        data-synth="synth3"
-        data-param="reverb"
-        min="0"
-        max="1"
-        step="0.01"
-      />
     </div>
   </body>
 

@@ -6,14 +6,14 @@ console.log(p5);
 const CONTAINER_ID = 'bubble-zone';
 
 // Отладка: красная рамка вокруг холста + сообщения в консоли
-const DEBUG = true;
+const DEBUG = false;
 // Если у div нулевой размер, используем эти значения
 const FALLBACK_WIDTH = 600;
 const FALLBACK_HEIGHT = 400;
 
 // Сетка
 const SHOW_GRID = true; // false = скрыть сетку
-const GRID_COLOR = [0, 0, 255, 255]; // HSB + alpha (диапазон 0-255)
+const GRID_COLOR = [0, 0, 255, 50]; // HSB + alpha (диапазон 0-255)
 
 // Размер пузырьков (диаметр, px)
 const BUBBLE_SIZE_MIN = 15;
@@ -24,6 +24,7 @@ const HUE_SPREAD = 5; // ± к оттенку
 const SAT_SPREAD = 40; // ± к насыщенности
 const BRI_SPREAD = 0; // ± к яркости
 const BASE_SATURATION = 100; // базовая насыщенность
+const BASE_BRIGHTNESS = 255; // базовая яркость
 const BUBBLE_ALPHA = 255; // прозрачность заливки (0-255)
 
 // Поведение
@@ -36,22 +37,59 @@ const LIFETIME_MAX = 5000;
 const GROW_TIME = 250; // мс на «надувание»
 const POP_TIME = 120; // мс анимации лопания
 
+// ================== СЕТКА И НОТЫ ==================
+
+// Размер сетки (COLS * ROWS должно быть >= notes.length)
+const COLS = 7; // количество столбцов
+const ROWS = 2; // количество строк
+
+// Ноты сразу с октавой. Раскладываются по сетке по порядку:
+// слева направо, сверху вниз, начиная с первой (левой верхней) клетки.
+const notes = ['C4', 'D4', 'E4', 'F#4', 'G4', 'A4', 'B4'];
+// Оттенок (hue) для каждой ноты — в том же порядке, что и notes
+const colores = [130, 130, 130, 130, 130, 170, 210];
+
+// Пример сетки 4x3:
+// const COLS = 4;
+// const ROWS = 3;
+// const notes = [
+//   'C3', 'D3', 'E3', 'G3',
+//   'A3', 'C4', 'D4', 'E4',
+//   'G4', 'A4', 'C5', 'D5',
+// ];
+// const colores = [0, 20, 40, 90, 130, 170, 210, 0, 20, 40, 90, 130];
+
 // ================== ДАННЫЕ ==================
 
-let synth;
+const synth = {
+  synth: {
+    attackNoise: 0.5, // «щипок» в начале: больше = жёстче атака
+    dampening: 5000, // Гц, срез высоких в затухании: меньше = глуше, «нейлон»
+    resonance: 0.98, // 0..1, длительность звучания струны
+    release: 1,
+    node: null,
+  },
+  eq: { node: null },
+  chorus: { node: null },
+  reverb: { node: null },
+};
 
-const notes = ['C', 'D', 'E', 'G', 'A'];
-const colores = [130, 130, 130, 130, 130, 170, 210]; // hue по ноте
-const octaves = ['4'];
-const tonos = [255]; // brightness по октаве
+function initBathSynth() {
+  synth.synth.node = new Tone.Synth(synth.synth);
+  synth.eq.node = new Tone.EQ3({ low: 2, mid: -2, high: -3 }); // «корпус» инструмента
+  synth.chorus.node = new Tone.Chorus(2, 2.5, 0.2).start(); // лёгкая «ширина»
+  synth.reverb.node = new Tone.Reverb({ decay: 1.5, wet: 0.2 });
 
-// const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-// const colores = [0, 20, 40, 90, 130, 170, 210]; // hue по ноте
-// const octaves = ['2', '3', '4', '5', '6', '7'];
-// const tonos = [105, 135, 165, 195, 225, 255]; // brightness по октаве
+  synth.synth.node.chain(
+    synth.eq.node,
+    synth.chorus.node,
+    synth.reverb.node,
+    Tone.Destination
+  );
+}
 
 let container;
-let divX, divY;
+let cellW, cellH;
 let isPressed = false;
 let pointerX = 0,
   pointerY = 0;
@@ -89,6 +127,17 @@ function setup() {
     container.style.minHeight = h + 'px';
   }
 
+  if (COLS * ROWS < notes.length) {
+    console.warn(
+      '[bubble] Сетка ' +
+        COLS +
+        'x' +
+        ROWS +
+        ' меньше, чем нот: ' +
+        notes.length
+    );
+  }
+
   const cnv = createCanvas(w, h);
   cnv.parent(container);
   const el = cnv.elt;
@@ -106,7 +155,8 @@ function setup() {
   colorMode(HSB, 255);
   updateGridSize();
 
-  synth = new Tone.Synth().toDestination();
+  // СОЗДАНИЕ СИНТА
+  initBathSynth();
 
   // Свои события на самом холсте: работает только внутри элемента
   el.addEventListener('pointerdown', onDown);
@@ -125,8 +175,15 @@ function setup() {
 }
 
 function updateGridSize() {
-  divX = width / notes.length;
-  divY = height / octaves.length;
+  cellW = width / COLS;
+  cellH = height / ROWS;
+}
+
+// Индекс ноты в массиве notes для текущей позиции указателя
+function getCellIndex() {
+  const col = constrain(floor(pointerX / cellW), 0, COLS - 1);
+  const row = constrain(floor(pointerY / cellH), 0, ROWS - 1);
+  return row * COLS + col;
 }
 
 // ================== СОБЫТИЯ ==================
@@ -158,7 +215,7 @@ function onMove(e) {
 function onUp() {
   isPressed = false;
   currentNote = '';
-  synth.triggerRelease();
+  synth.synth.node.triggerRelease();
 }
 
 // ================== DRAW ==================
@@ -169,26 +226,33 @@ function draw() {
   if (SHOW_GRID) drawGrid();
 
   if (isPressed) {
-    const noteIdx = constrain(floor(pointerX / divX), 0, notes.length - 1);
-    const octIdx = constrain(floor(pointerY / divY), 0, octaves.length - 1);
+    const idx = getCellIndex();
+    const newNote = notes[idx]; // undefined, если клетка пустая
 
-    // Звук
-    const newNote = notes[noteIdx] + octaves[octIdx];
-    if (newNote !== currentNote) {
-      currentNote = newNote;
-      synth.triggerRelease();
-      synth.triggerAttack(newNote);
-    }
+    if (newNote === undefined) {
+      // Пустая клетка (нот меньше, чем клеток): тишина и без пузырьков
+      if (currentNote !== '') {
+        currentNote = '';
+        synth.synth.node.triggerRelease();
+      }
+    } else {
+      // Звук
+      if (newNote !== currentNote) {
+        currentNote = newNote;
+        synth.synth.node.triggerRelease();
+        synth.synth.node.triggerAttack(newNote);
+      }
 
-    // Пузырьки
-    const now = millis();
-    const moving = now - lastMoveTime < MOVE_TIMEOUT;
-    if (
-      (!SPAWN_ONLY_WHEN_MOVING || moving) &&
-      now - lastSpawnTime >= SPAWN_INTERVAL
-    ) {
-      lastSpawnTime = now;
-      spawnBubble(noteIdx, octIdx, now);
+      // Пузырьки
+      const now = millis();
+      const moving = now - lastMoveTime < MOVE_TIMEOUT;
+      if (
+        (!SPAWN_ONLY_WHEN_MOVING || moving) &&
+        now - lastSpawnTime >= SPAWN_INTERVAL
+      ) {
+        lastSpawnTime = now;
+        spawnBubble(idx, now);
+      }
     }
   }
 
@@ -199,15 +263,16 @@ function drawGrid() {
   push();
   stroke(...GRID_COLOR);
   strokeWeight(1);
-  for (let i = 1; i < notes.length; i++) line(divX * i, 0, divX * i, height);
-  for (let j = 1; j < octaves.length; j++) line(0, divY * j, width, divY * j);
+  for (let i = 1; i < COLS; i++) line(cellW * i, 0, cellW * i, height);
+  for (let j = 1; j < ROWS; j++) line(0, cellH * j, width, cellH * j);
   pop();
 }
 
-function spawnBubble(noteIdx, octIdx, now) {
+function spawnBubble(noteIdx, now) {
   // случайная точка в круге вокруг курсора
   const angle = random(TWO_PI);
   const dist = POSITION_SPREAD * sqrt(random());
+  const baseHue = colores[noteIdx] !== undefined ? colores[noteIdx] : 0;
 
   bubbles.push({
     x: pointerX + cos(angle) * dist,
@@ -215,9 +280,9 @@ function spawnBubble(noteIdx, octIdx, now) {
     size: random(BUBBLE_SIZE_MIN, BUBBLE_SIZE_MAX),
     born: now,
     life: random(LIFETIME_MIN, LIFETIME_MAX),
-    h: (colores[noteIdx] + random(-HUE_SPREAD, HUE_SPREAD) + 255) % 255,
+    h: (baseHue + random(-HUE_SPREAD, HUE_SPREAD) + 255) % 255,
     s: constrain(BASE_SATURATION + random(-SAT_SPREAD, SAT_SPREAD), 0, 255),
-    b: constrain(tonos[octIdx] + random(-BRI_SPREAD, BRI_SPREAD), 0, 255),
+    b: constrain(BASE_BRIGHTNESS + random(-BRI_SPREAD, BRI_SPREAD), 0, 255),
   });
 }
 

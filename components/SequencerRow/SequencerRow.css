@@ -21,7 +21,7 @@
 
 .ToggleButton.active {
   font-weight: initial;
-  color: var(--dark-green);
+  /* color: var(--dark-green); */
   background-color: var(--dark-green);
 }
 
@@ -33,9 +33,8 @@
 /* текущий шаг */
 .SequencerRow .ToggleButton.playing {
   background: var(--playhead);
-  border-color: var(--playhead);
+  /* border-color: var(--playhead); */
 }
 .SequencerRow .ToggleButton.active.playing {
-  background: #8fd1c4;
-  border-color: #8fd1c4;
+  background: #b084a2;
 }
