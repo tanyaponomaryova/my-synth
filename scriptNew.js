@@ -100,8 +100,8 @@ const drums = {
     },
     hihat: {
       sampler: {
-        urls: { C2: 'HT3DA.WAV' },
-        baseUrl: 'samples/roland_tr_909/',
+        urls: { C2: 'wood-click_144bpm.wav' },
+        baseUrl: 'samples/',
         node: null,
       },
       channel: {
@@ -117,8 +117,8 @@ const drums = {
     },
     clap: {
       sampler: {
-        urls: { C2: 'CLOP3.WAV' },
-        baseUrl: 'samples/roland_tr_909/',
+        urls: { C2: 'percussion-ding.wav' },
+        baseUrl: 'samples/',
         node: null,
       },
       channel: {
@@ -631,20 +631,25 @@ const synth3 = {
   // - Чтобы волны качались медленнее и глубже, tremolo1: commonFx.tremolo.frequency 0.1.
   // - Ещё бархатнее: lowpass.frequency 1200.
   synth: {
-    maxPolyphony: 8, // сколько нот максимум звучит одновременно (по умолчанию 32)
-    voice: Tone.FMSynth, // тип голоса
-    options: {
-      harmonicity: 3.99,
-      modulationIndex: 1.5,
-      oscillator: { type: 'sine' },
-      envelope: { attack: 0.002, decay: 0.9, sustain: 0, release: 0.9 },
-      modulation: { type: 'sine' },
-      modulationEnvelope: {
-        attack: 0.002,
-        decay: 0.15,
-        sustain: 0,
-        release: 0.2,
-      },
+    harmonicity: 3.99,
+    modulationIndex: 1.5,
+    oscillator: {
+      type: 'sine',
+    },
+    envelope: {
+      attack: 0.002,
+      decay: 0.9,
+      sustain: 0,
+      release: 0.9,
+    },
+    modulation: {
+      type: 'sine',
+    },
+    modulationEnvelope: {
+      attack: 0.002,
+      decay: 0.15,
+      sustain: 0,
+      release: 0.2,
     },
     node: null,
   },
@@ -687,38 +692,97 @@ const synth3 = {
   sequence: [
     {
       time: '0:0:0',
-      noteName: ['F#3', 'A3', 'C#4', 'E4', 'G#4'],
-      duration: '2n',
+      noteName: 'C3',
+      duration: '4n',
+      velocity: 1,
+    },
+    {
+      time: '0:1:0',
+      noteName: 'D3',
+      duration: '4n',
       velocity: 1,
     },
     {
       time: '0:2:0',
-      noteName: ['G3', 'B3', 'D4', 'F#4'],
+      noteName: 'E3',
       duration: '2n',
       velocity: 1,
     },
     {
       time: '1:0:0',
-      noteName: ['A3', 'C#4', 'E4', 'B4'],
-      duration: '2n',
+      noteName: 'A3',
+      duration: '4n',
+      velocity: 1,
+    },
+    {
+      time: '1:1:0',
+      noteName: 'G3',
+      duration: '4n',
       velocity: 1,
     },
     {
       time: '1:2:0',
-      noteName: ['D3', 'F#3', 'A3', 'C#4', 'E4'],
+      noteName: 'E3',
+      duration: '4n',
+      velocity: 1,
+    },
+    {
+      time: '1:3:0',
+      noteName: 'D3',
+      duration: '4n',
+      velocity: 1,
+    },
+
+    // повтор чуть иначе
+
+    {
+      time: '2:0:0',
+      noteName: 'C3',
+      duration: '4n',
+      velocity: 1,
+    },
+    {
+      time: '2:1:0',
+      noteName: 'D3',
+      duration: '4n',
+      velocity: 1,
+    },
+    {
+      time: '2:2:0',
+      noteName: 'E3',
       duration: '2n',
       velocity: 1,
     },
+    {
+      time: '3:0:0',
+      noteName: 'A3',
+      duration: '4n',
+      velocity: 1,
+    },
+    {
+      time: '3:1:0',
+      noteName: 'G3',
+      duration: '4n',
+      velocity: 1,
+    },
+    {
+      time: '3:2:0',
+      noteName: 'C3',
+      duration: '4n',
+      velocity: 1,
+    },
+    {
+      time: '3:3:0',
+      noteName: 'E3',
+      duration: '4n',
+      velocity: 1,
+    },
   ],
-  loop: '1m',
+  loop: '4m',
 };
 
 async function initSynth3() {
-  synth3.synth.node = new Tone.PolySynth({
-    voice: synth3.synth.voice,
-    maxPolyphony: synth3.synth.maxPolyphony,
-    options: synth3.synth.options,
-  });
+  synth3.synth.node = new Tone.FMSynth(synth3.synth);
 
   synth3.bandpass.node = new Tone.Filter(synth3.bandpass);
   synth3.lowpass.node = new Tone.Filter(synth3.lowpass);
