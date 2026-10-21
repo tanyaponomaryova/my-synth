@@ -1,12 +1,133 @@
-@import 'stylesheets/reset.css';
-@import 'stylesheets/vars.css';
-@import 'stylesheets/fonts.css';
-@import 'stylesheets/basics.css';
+/* ============ Bath Synth: общие стили и сетка страницы ============ */
+@import url('components/button.css');
+@import url('components/slider.css');
+@import url('components/knob.css');
+@import url('components/towel-rail.css');
+@import url('components/washer.css');
+@import url('components/bottle.css');
+@import url('components/bathtub.css');
+@import url('components/sequencer.css');
+@import url('components/curtain.css');
 
-@import 'components/Button/Button.css';
-@import 'components/ToggleButton/ToggleButton.css';
-@import 'components/ToggleButtonSet/ToggleButtonSet.css';
-@import 'components/Knob/Knob.css';
-@import 'components/Slider/Slider.css';
-@import 'components/SequencerRow/SequencerRow.css';
-@import 'components/Sequencer/Sequencer.css';
+:root {
+  /* палитра из макета */
+  --grey-100: #f1f1f1;
+  --grey-200: #e0e0e0;
+  --grey-300: #cfcfcf;
+  --grey-400: #c4c4c4;
+  --grey-500: #8d8d8d;
+  --ink: #383838;
+  --ink-soft: #4a4a4a;
+
+  --blue: #b6d0ff;
+  --pink: #fb9fe0;
+  --green: #bdff5a;
+
+  --water: #82d8ff;
+  --skin: #ffcfcf;
+  --skin-shade: #ffaaa8;
+  --duck: #ffe066;
+
+  /* шрифты (подключены в <head> через Google Fonts, есть запасные) */
+  --font-label: 'Syne', 'Arial Black', system-ui, sans-serif;
+  --font-hand: 'Mansalva', 'Comic Sans MS', cursive;
+  --font-script: 'Cedarville Cursive', 'Brush Script MT', cursive;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-label);
+}
+
+/* элемент скрыт визуально, но остаётся в DOM: на нём работает JS и клавиатура */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* подписи вида «DRUM SAMPLER», «OSCI», «FX» */
+.Label {
+  font-family: var(--font-label);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ---------- сетка: левая колонка / центр / правая колонка ---------- */
+.BathSynth {
+  display: grid;
+  grid-template-columns: 1fr 1.97fr 1fr; /* пропорции макета: 460 : 905 : 455 */
+  gap: 2.4%;
+  align-items: start;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(16px, 5vw, 64px);
+}
+
+.Col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.Col--center .Drums {
+  margin-top: 2.4%;
+}
+
+/* ---------- мобильная раскладка: одна колонка ---------- */
+@media (max-width: 860px) {
+  .BathSynth {
+    display: flex;
+    flex-direction: column;
+    gap: 8vw;
+  }
+
+  /* колонки «растворяются», блоки сортируются через order */
+  .Col {
+    display: contents;
+  }
+
+  .Washer {
+    order: 1;
+  }
+  .TowelRail {
+    order: 2;
+  }
+  .Bath {
+    order: 3;
+  }
+  .Drums {
+    order: 4;
+    margin-top: 0 !important;
+  }
+  .Curtain {
+    order: 5;
+  }
+
+  .TowelRail,
+  .Washer,
+  .Curtain {
+    width: min(100%, 420px);
+    margin-inline: auto;
+  }
+  .Washer {
+    margin-top: 8vw;
+  }
+}

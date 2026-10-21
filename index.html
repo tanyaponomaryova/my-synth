@@ -1,340 +1,779 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Synth Controls And Examples</title>
+    <title>Bath Synth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Mansalva&family=Syne:wght@800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="index.css" />
   </head>
 
   <body class="index">
-    <div class="horizontalFlex">
-      <div>
-        <div class="Button" id="startButton">Start</div>
-        <!-- BPM-->
-        <div class="Slider" id="bpmSlider">
-          <div class="title">BPM</div>
-          <input type="range" min="40" max="200" step="1" value="120" />
-        </div>
-        <!-- ОБЩАЯ ГРОМКОСТЬ-->
-        <div class="Slider" id="masterVolume">
-          <div class="title">ОБЩАЯ ГРОМКОСТЬ</div>
-          <input type="range" min="-40" max="20" step="1" value="0" />
-        </div>
+    <!-- формы волн для выбора осциллятора (цвет задаёт CSS) -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <symbol id="wave-triangle" viewBox="0 0 100 60">
+        <path d="M4 42 L27 14 L50 42 L73 14 L96 42" />
+      </symbol>
+      <symbol id="wave-sawtooth" viewBox="0 0 100 60">
+        <path d="M6 12 L48 38 L48 10 L92 36" />
+      </symbol>
+      <symbol id="wave-sine" viewBox="0 0 100 60">
+        <path d="M4 36 C16 6 38 6 50 36 S84 66 96 36" />
+      </symbol>
+      <symbol id="wave-square" viewBox="0 0 100 60">
+        <path d="M4 50 V18 H32 V50 H60 V18 H88 V50 H96" />
+      </symbol>
+    </svg>
+
+    <main class="BathSynth">
+      <!-- ===== ЛЕВАЯ КОЛОНКА ===== -->
+      <div class="Col Col--left">
+        <!-- полотенцесушитель: громкость и BPM -->
+        <section class="TowelRail" aria-label="Общие настройки">
+          <svg class="TowelRail-pipe" viewBox="0 0 460 360" aria-hidden="true">
+            <path
+              d="M430 28 H70 A38.5 38.5 0 0 0 70 105 H390 A38.5 38.5 0 0 1 390 181 H70 A38.5 38.5 0 0 0 70 258 H390 A38.5 38.5 0 0 1 390 335 H50"
+              fill="none"
+              stroke="#e0e0e0"
+              stroke-width="52"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <svg
+            class="TowelRail-socks"
+            viewBox="-60 -10 215 210"
+            aria-hidden="true"
+          >
+            <g fill="#4a4a4a" stroke="#4a4a4a">
+              <g>
+                <rect x="0" y="0" width="54" height="70" stroke="none" />
+                <circle cx="58" cy="80" r="16" stroke="none" />
+                <line
+                  x1="26"
+                  y1="85"
+                  x2="-24"
+                  y2="162"
+                  stroke-width="62"
+                  stroke-linecap="round"
+                />
+              </g>
+              <g transform="translate(75 -7) rotate(6 27 0)">
+                <rect x="0" y="0" width="54" height="70" stroke="none" />
+                <circle cx="58" cy="80" r="16" stroke="none" />
+                <line
+                  x1="26"
+                  y1="85"
+                  x2="-24"
+                  y2="162"
+                  stroke-width="62"
+                  stroke-linecap="round"
+                />
+              </g>
+            </g>
+          </svg>
+
+          <!-- BPM -->
+          <div class="Slider" id="bpmSlider" style="--y: 335">
+            <div class="title">BPM</div>
+            <input
+              type="range"
+              min="40"
+              max="200"
+              step="1"
+              value="120"
+              aria-label="BPM"
+            />
+          </div>
+          <!-- ОБЩАЯ ГРОМКОСТЬ -->
+          <div class="Slider" id="masterVolume" style="--y: 181">
+            <div class="title">Volume</div>
+            <input
+              type="range"
+              min="-40"
+              max="20"
+              step="1"
+              value="0"
+              aria-label="Общая громкость"
+            />
+          </div>
+        </section>
+
+        <!-- стиральная машина: play/pause, бомбочки-громкости синтов -->
+        <section class="Washer" aria-label="Управление и громкость синтов">
+          <svg class="Washer-ducks" viewBox="0 0 258 190" aria-hidden="true">
+            <symbol id="duck" viewBox="0 0 100 90">
+              <ellipse cx="45" cy="62" rx="42" ry="26" fill="#ffe066" />
+              <circle cx="62" cy="28" r="24" fill="#ffe066" />
+              <path d="M18 56 Q34 84 64 72 Q42 66 18 56 Z" fill="#ffd23f" />
+              <path d="M82 30 L100 38 L82 45 Z" fill="#ffa58a" />
+              <circle cx="69" cy="25" r="3.8" fill="#ff9d6e" />
+            </symbol>
+            <use href="#duck" x="15" y="0" width="150" height="135" />
+            <use href="#duck" x="153" y="22" width="85" height="76" />
+            <use href="#duck" x="90" y="90" width="80" height="72" />
+            <use href="#duck" x="1" y="122" width="78" height="70" />
+            <use href="#duck" x="191" y="120" width="66" height="60" />
+          </svg>
+
+          <div class="Washer-lid"></div>
+
+          <div class="Washer-bombs">
+            <div class="Knob Knob--blue">
+              <div class="Knob-mark"></div>
+              <input
+                class="visually-hidden"
+                type="range"
+                data-synth="synth1"
+                data-param="volume"
+                min="-100"
+                max="6"
+                step="1"
+                value="-100"
+                aria-label="Synth 1: громкость"
+              />
+            </div>
+            <div class="Knob Knob--pink">
+              <div class="Knob-mark"></div>
+              <input
+                class="visually-hidden"
+                type="range"
+                data-synth="synth2"
+                data-param="volume"
+                min="-100"
+                max="6"
+                step="1"
+                value="-100"
+                aria-label="Synth 2: громкость"
+              />
+            </div>
+            <div class="Knob Knob--green">
+              <div class="Knob-mark"></div>
+              <input
+                class="visually-hidden"
+                type="range"
+                data-synth="synth3"
+                data-param="volume"
+                min="-100"
+                max="6"
+                step="1"
+                value="-100"
+                aria-label="Synth 3: громкость"
+              />
+            </div>
+          </div>
+
+          <button
+            class="DrumButton"
+            id="startButton"
+            type="button"
+            aria-label="Play"
+          >
+            <span class="DrumButton-icon"></span>
+          </button>
+          <span class="Washer-play" aria-hidden="true"></span>
+          <button
+            class="StopButton"
+            id="stopButton"
+            type="button"
+            aria-label="Stop"
+          ></button>
+        </section>
       </div>
-      <div
-        id="bubble-zone"
-        style="width: 600px; height: 200px; background-color: rgb(0, 115, 255)"
-      >
-        <!-- <button style="position: relative; z-index: 1">Кнопка</button> -->
+
+      <!-- ===== ЦЕНТР ===== -->
+      <div class="Col Col--center">
+        <section class="Bath" aria-label="Ванна">
+          <!-- полка FX -->
+          <div class="FxShelf">
+            <div class="Label FxShelf-title">FX</div>
+            <div class="FxShelf-bottles">
+              <div class="FxGroup FxGroup--blue">
+                <div class="Bottle Bottle--reverb" style="--value: 0">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">reverb</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth1"
+                    data-param="reverb"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0"
+                    aria-label="Synth 1: reverb"
+                  />
+                </div>
+                <div class="Bottle Bottle--tremolo" style="--value: 0">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">tremolo</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth1"
+                    data-param="tremolo"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0"
+                    aria-label="Synth 1: tremolo"
+                  />
+                </div>
+                <div class="Bottle Bottle--ppd" style="--value: 0.2">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">ppd</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth1"
+                    data-param="delay"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.2"
+                    aria-label="Synth 1: delay"
+                  />
+                </div>
+              </div>
+              <div class="FxGroup FxGroup--pink">
+                <div class="Bottle Bottle--reverb" style="--value: 0.2">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">reverb</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth2"
+                    data-param="reverb"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.2"
+                    aria-label="Synth 2: reverb"
+                  />
+                </div>
+                <div class="Bottle Bottle--tremolo" style="--value: 0">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">tremolo</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth2"
+                    data-param="tremolo"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0"
+                    aria-label="Synth 2: tremolo"
+                  />
+                </div>
+                <div class="Bottle Bottle--ppd" style="--value: 0">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">ppd</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth2"
+                    data-param="delay"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0"
+                    aria-label="Synth 2: delay"
+                  />
+                </div>
+              </div>
+              <div class="FxGroup FxGroup--green">
+                <div class="Bottle Bottle--reverb" style="--value: 0.25">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">reverb</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth3"
+                    data-param="reverb"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.25"
+                    aria-label="Synth 3: reverb"
+                  />
+                </div>
+                <div class="Bottle Bottle--tremolo" style="--value: 0.2">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">tremolo</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth3"
+                    data-param="tremolo"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.2"
+                    aria-label="Synth 3: tremolo"
+                  />
+                </div>
+                <div class="Bottle Bottle--ppd" style="--value: 0">
+                  <div class="Bottle-pump"></div>
+                  <div class="Bottle-body">
+                    <div class="Bottle-liquid"></div>
+                    <span class="Bottle-label">ppd</span>
+                  </div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    data-synth="synth3"
+                    data-param="delay"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0"
+                    aria-label="Synth 3: delay"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ванна -->
+          <svg class="Tub" viewBox="0 0 905 565" aria-hidden="true">
+            <path
+              d="M0 30 Q0 0 30 0 H875 Q905 0 905 30 V300 C905 380 880 430 850 500 Q835 565 780 565 H125 Q70 565 55 500 C25 430 0 380 0 300 Z"
+              fill="#f1f1f1"
+            />
+          </svg>
+          <div class="Water"></div>
+
+          <!-- человек (координаты: макет минус (710, 235)) -->
+          <svg class="Person" viewBox="0 0 905 890" aria-hidden="true">
+            <defs>
+              <linearGradient id="skinShade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0.45" stop-color="#ffcfcf" />
+                <stop offset="1" stop-color="#ffaaa8" />
+              </linearGradient>
+            </defs>
+            <!-- ноги -->
+            <path
+              d="M620 470 L742 362 L782 262"
+              fill="none"
+              stroke="#ffc6c6"
+              stroke-width="62"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <ellipse cx="783" cy="250" rx="26" ry="30" fill="#ffc6c6" />
+            <g fill="#ffc6c6">
+              <circle cx="770" cy="228" r="9" />
+              <circle cx="786" cy="222" r="9" />
+              <circle cx="800" cy="230" r="8" />
+            </g>
+            <path
+              d="M640 505 C740 525 820 490 868 410"
+              fill="none"
+              stroke="#ffbdbd"
+              stroke-width="60"
+              stroke-linecap="round"
+            />
+            <ellipse
+              cx="882"
+              cy="385"
+              rx="36"
+              ry="58"
+              transform="rotate(-12 882 385)"
+              fill="#ffbdbd"
+            />
+            <g fill="#ffbdbd">
+              <circle cx="866" cy="326" r="10" />
+              <circle cx="886" cy="322" r="10" />
+              <circle cx="904" cy="332" r="9" />
+            </g>
+            <!-- туловище -->
+            <path
+              d="M70 330 L190 360 L215 520 L150 565 L60 545 Q95 450 70 330 Z"
+              fill="url(#skinShade)"
+            />
+            <!-- рука -->
+            <path
+              d="M190 372 C300 345 430 335 540 348"
+              fill="none"
+              stroke="#ffcfcf"
+              stroke-width="48"
+              stroke-linecap="round"
+            />
+            <ellipse cx="545" cy="346" rx="32" ry="17" fill="#ffc6c6" />
+            <!-- голова -->
+            <ellipse cx="90" cy="275" rx="72" ry="68" fill="#ffcfcf" />
+            <circle cx="158" cy="262" r="13" fill="#ffcfcf" />
+            <ellipse cx="62" cy="318" rx="24" ry="14" fill="#ffb4b4" />
+            <path
+              d="M104 254 L114 270 L126 257"
+              fill="none"
+              stroke="#3a3a3a"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <!-- зона пузырей: сюда p5 (bubbleBath.js) рисует canvas -->
+          <div id="bubble-zone"></div>
+        </section>
+
+        <!-- драм-сэмплер -->
+        <section class="Drums" aria-label="Drum sampler">
+          <div class="Label Drums-title">Drum sampler</div>
+          <div class="Drums-body">
+            <div class="Sequencer">
+              <div class="SequencerRow" data-track="kick">
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+              </div>
+              <div class="SequencerRow" data-track="snare">
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+              </div>
+              <div class="SequencerRow" data-track="hihat">
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+              </div>
+              <div class="SequencerRow" data-track="clap">
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton active"></div>
+              </div>
+            </div>
+            <div class="Mixer">
+              <div class="MixerRow" data-track="kick">
+                <div class="Knob Knob--tick" id="kickVolume" title="shaker">
+                  <div class="Knob-mark"></div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    min="-100"
+                    max="6"
+                    step="1"
+                    value="-100"
+                    aria-label="Громкость: shaker"
+                  />
+                </div>
+              </div>
+              <div class="MixerRow" data-track="snare">
+                <div class="Knob Knob--tick" id="snareVolume" title="bubbles">
+                  <div class="Knob-mark"></div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    min="-100"
+                    max="6"
+                    step="1"
+                    value="-100"
+                    aria-label="Громкость: bubbles"
+                  />
+                </div>
+              </div>
+              <div class="MixerRow" data-track="hihat">
+                <div class="Knob Knob--tick" id="hihatVolume" title="knock">
+                  <div class="Knob-mark"></div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    min="-100"
+                    max="6"
+                    step="1"
+                    value="-100"
+                    aria-label="Громкость: knock"
+                  />
+                </div>
+              </div>
+              <div class="MixerRow" data-track="clap">
+                <div class="Knob Knob--tick" id="clapVolume" title="pit">
+                  <div class="Knob-mark"></div>
+                  <input
+                    class="visually-hidden"
+                    type="range"
+                    min="-100"
+                    max="6"
+                    step="1"
+                    value="-100"
+                    aria-label="Громкость: pit"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-    </div>
 
-    <br />
-    <hr />
-    <br />
+      <!-- ===== ПРАВАЯ КОЛОНКА ===== -->
+      <div class="Col Col--right">
+        <section class="Curtain" aria-label="Выбор осцилляторов">
+          <div class="Curtain-paper"></div>
+          <svg class="Curtain-hem" viewBox="0 0 453 72" aria-hidden="true">
+            <path
+              d="M0 0 H453 V22 Q410 8 360 22 Q345 30 340 50 Q335 72 275 72 Q215 72 210 50 Q205 30 190 22 Q150 8 95 22 Q50 34 30 30 Q10 28 0 20 Z"
+              fill="#ebebeb"
+            />
+          </svg>
+          <div class="Curtain-rings" aria-hidden="true">
+            <span class="Ring"></span>
+            <span class="Ring"></span>
+            <span class="Ring"></span>
+            <span class="Ring"></span>
+            <span class="Ring"></span>
+            <span class="Ring"></span>
+            <span class="Ring"></span>
+            <span class="Ring"></span>
+          </div>
 
-    <main class="Machine">
-      <div class="Controls horizontalFlex">
-        <div class="Mixer">
-          <div class="MixerRow" data-track="kick">
-            <div class="Slider" id="kickVolume">
-              <div class="title">Kick</div>
-              <input type="range" min="-100" max="6" step="1" value="-100" />
+          <h1 class="Curtain-title">bath<br />synth</h1>
+          <svg
+            class="Curtain-underline"
+            viewBox="0 0 400 40"
+            aria-hidden="true"
+          >
+            <path
+              d="M6 32 C90 22 250 14 394 8"
+              fill="none"
+              stroke="#4a4a4a"
+              stroke-width="12"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <div class="Label Curtain-label">Osci</div>
+          <div class="OscGrid">
+            <div
+              class="OscColumn Osc--blue"
+              data-synth="synth1"
+              data-param="oscillator"
+            >
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="triangle"
+                aria-label="triangle"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-triangle" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="sawtooth"
+                aria-label="sawtooth"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-sawtooth" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton active"
+                type="button"
+                data-type="sine"
+                aria-label="sine"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-sine" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="square"
+                aria-label="square"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-square" />
+                </svg>
+              </button>
+            </div>
+            <div
+              class="OscColumn Osc--pink"
+              data-synth="synth2"
+              data-param="oscillator"
+            >
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="triangle"
+                aria-label="triangle"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-triangle" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="sawtooth"
+                aria-label="sawtooth"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-sawtooth" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton active"
+                type="button"
+                data-type="sine"
+                aria-label="sine"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-sine" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="square"
+                aria-label="square"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-square" />
+                </svg>
+              </button>
+            </div>
+            <div
+              class="OscColumn Osc--green"
+              data-synth="synth3"
+              data-param="oscillator"
+            >
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="triangle"
+                aria-label="triangle"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-triangle" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="sawtooth"
+                aria-label="sawtooth"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-sawtooth" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton active"
+                type="button"
+                data-type="sine"
+                aria-label="sine"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-sine" />
+                </svg>
+              </button>
+              <button
+                class="ToggleButton OscButton"
+                type="button"
+                data-type="square"
+                aria-label="square"
+              >
+                <svg class="Wave" viewBox="0 0 100 60" aria-hidden="true">
+                  <use href="#wave-square" />
+                </svg>
+              </button>
             </div>
           </div>
-          <div class="MixerRow" data-track="snare">
-            <div class="Slider" id="snareVolume">
-              <div class="title">Snare</div>
-              <input type="range" min="-100" max="6" step="1" value="-100" />
-            </div>
-          </div>
-          <div class="MixerRow" data-track="hihat">
-            <div class="Slider" id="hihatVolume">
-              <div class="title">Hi-hat</div>
-              <input type="range" min="-100" max="6" step="1" value="-100" />
-            </div>
-          </div>
-          <div class="MixerRow" data-track="clap">
-            <div class="Slider" id="clapVolume">
-              <div class="title">Clap</div>
-              <input type="range" min="-100" max="6" step="1" value="-100" />
-            </div>
-          </div>
-        </div>
-
-        <div class="Sequencer">
-          <div class="SequencerRow" data-track="kick">
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-          </div>
-
-          <div class="SequencerRow" data-track="snare">
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-          </div>
-
-          <div class="SequencerRow" data-track="hihat">
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-          </div>
-
-          <div class="SequencerRow" data-track="clap">
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton"></div>
-            <div class="ToggleButton active"></div>
-          </div>
-        </div>
+        </section>
       </div>
     </main>
 
-    <br />
-    <hr />
-    <br />
-
-    <!-- SYNTH 1 2 3 SETTINGS -->
-    <div class="horizontalFlex">
-      <!-- SYNTH 1 -->
-      <div>
-        <div class="Slider">
-          <div class="title">Synth 1 Volume</div>
-          <input
-            type="range"
-            data-synth="synth1"
-            data-param="volume"
-            min="-100"
-            max="6"
-            step="1"
-          />
-        </div>
-        <div class="ToggleButtonSet">
-          <div class="title">Oscillator</div>
-          <div data-synth="synth1" data-param="oscillator">
-            <div class="ToggleButton active" data-type="sine">sine</div>
-            <div class="ToggleButton" data-type="square">square</div>
-            <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
-            <div class="ToggleButton" data-type="triangle">triangle</div>
-          </div>
-        </div>
-        <br />
-        <div class="Slider">
-          <div class="title">tremolo</div>
-          <input
-            type="range"
-            data-synth="synth1"
-            data-param="tremolo"
-            min="0"
-            max="1"
-            step="0.01"
-            value="0"
-          />
-        </div>
-        <div class="Slider">
-          <div class="title">delay</div>
-          <input
-            type="range"
-            data-synth="synth1"
-            data-param="delay"
-            min="0"
-            max="1"
-            step="0.01"
-            value="0"
-          />
-        </div>
-        <div class="Slider">
-          <div class="title">reverb</div>
-          <input
-            type="range"
-            data-synth="synth1"
-            data-param="reverb"
-            min="0"
-            max="1"
-            step="0.01"
-            value="0"
-          />
-        </div>
-      </div>
-      <br />
-      <hr />
-      <br />
-      <!-- SYNTH 2 -->
-      <div>
-        <div class="Slider">
-          <div class="title">Synth 2 Volume</div>
-          <input
-            type="range"
-            data-synth="synth2"
-            data-param="volume"
-            min="-100"
-            max="6"
-            step="1"
-          />
-        </div>
-        <div class="ToggleButtonSet">
-          <div class="title">Oscillator</div>
-          <div data-synth="synth2" data-param="oscillator">
-            <div class="ToggleButton active" data-type="sine">sine</div>
-            <div class="ToggleButton" data-type="square">square</div>
-            <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
-            <div class="ToggleButton" data-type="triangle">triangle</div>
-          </div>
-        </div>
-        <br />
-        <div class="Slider">
-          <div class="title">tremolo</div>
-          <input
-            type="range"
-            data-synth="synth2"
-            data-param="tremolo"
-            min="0"
-            max="1"
-            step="0.01"
-          />
-        </div>
-        <div class="Slider">
-          <div class="title">delay</div>
-          <input
-            type="range"
-            data-synth="synth2"
-            data-param="delay"
-            min="0"
-            max="1"
-            step="0.01"
-          />
-        </div>
-        <div class="Slider">
-          <div class="title">reverb</div>
-          <input
-            type="range"
-            data-synth="synth2"
-            data-param="reverb"
-            min="0"
-            max="1"
-            step="0.01"
-          />
-        </div>
-      </div>
-      <br />
-      <hr />
-      <br />
-      <!-- SYNTH 3 -->
-      <div>
-        <div class="Slider">
-          <div class="title">Synth 3 Volume</div>
-          <input
-            type="range"
-            data-synth="synth3"
-            data-param="volume"
-            min="-100"
-            max="6"
-            step="1"
-          />
-        </div>
-        <div class="ToggleButtonSet">
-          <div class="title">Oscillator</div>
-          <div data-synth="synth3" data-param="oscillator">
-            <div class="ToggleButton active" data-type="sine">sine</div>
-            <div class="ToggleButton" data-type="square">square</div>
-            <div class="ToggleButton" data-type="sawtooth">sawtooth</div>
-            <div class="ToggleButton" data-type="triangle">triangle</div>
-          </div>
-        </div>
-        <br />
-        <div class="Slider">
-          <div class="title">tremolo</div>
-          <input
-            type="range"
-            data-synth="synth3"
-            data-param="tremolo"
-            min="0"
-            max="1"
-            step="0.01"
-          />
-        </div>
-        <div class="Slider">
-          <div class="title">delay</div>
-          <input
-            type="range"
-            data-synth="synth3"
-            data-param="delay"
-            min="0"
-            max="1"
-            step="0.01"
-          />
-        </div>
-        <div class="Slider">
-          <div class="title">reverb</div>
-          <input
-            type="range"
-            data-synth="synth3"
-            data-param="reverb"
-            min="0"
-            max="1"
-            step="0.01"
-          />
-        </div>
-      </div>
-    </div>
+    <script src="https://unpkg.com/tone@15.0.4/build/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@2.3.3/lib/p5.min.js"></script>
+    <script type="module" src="scriptNew.js"></script>
+    <script src="bubbleBath.js"></script>
+    <script src="components/controls.js"></script>
   </body>
-
-  <script src="https://unpkg.com/tone@15.0.4/build/Tone.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.3/lib/p5.min.js"></script>
-  <!-- <script type="module" src="script.js"></script> -->
-  <script type="module" src="scriptNew.js"></script>
-  <script src="bubbleBath.js"></script>
 </html>

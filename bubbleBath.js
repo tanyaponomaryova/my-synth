@@ -40,12 +40,14 @@ const POP_TIME = 120; // мс анимации лопания
 // ================== СЕТКА И НОТЫ ==================
 
 // Размер сетки (COLS * ROWS должно быть >= notes.length)
-const COLS = 7; // количество столбцов
+const COLS = 5; // количество столбцов
 const ROWS = 2; // количество строк
 
 // Ноты сразу с октавой. Раскладываются по сетке по порядку:
 // слева направо, сверху вниз, начиная с первой (левой верхней) клетки.
-const notes = ['C4', 'D4', 'E4', 'F#4', 'G4', 'A4', 'B4'];
+// const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
+// const notes = ['F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5', 'G5', 'A5'];
+const notes = ['G4', 'A4', 'B4', 'G4', 'A4', 'A4', 'G4', 'B4'];
 // Оттенок (hue) для каждой ноты — в том же порядке, что и notes
 const colores = [130, 130, 130, 130, 130, 170, 210];
 
@@ -63,27 +65,89 @@ const colores = [130, 130, 130, 130, 130, 170, 210];
 
 const synth = {
   synth: {
-    attackNoise: 0.5, // «щипок» в начале: больше = жёстче атака
-    dampening: 5000, // Гц, срез высоких в затухании: меньше = глуше, «нейлон»
-    resonance: 0.98, // 0..1, длительность звучания струны
-    release: 1,
+    type: 'FMSynth',
+    volume: -8,
+
+    harmonicity: 3.5,
+    modulationIndex: 2.2,
+
+    oscillator: {
+      type: 'sine',
+    },
+
+    modulation: {
+      type: 'sine',
+    },
+
+    envelope: {
+      attack: 0.002,
+      decay: 0.8,
+      sustain: 0.15,
+      release: 1.2,
+    },
+
+    modulationEnvelope: {
+      attack: 0.001,
+      decay: 0.22,
+      sustain: 0,
+      release: 0.08,
+    },
+
     node: null,
   },
-  eq: { node: null },
-  chorus: { node: null },
-  reverb: { node: null },
+
+  filter: {
+    type: 'lowpass',
+    frequency: 4800,
+    rolloff: -12,
+    Q: 0.6,
+    node: null,
+  },
+
+  chorus: {
+    frequency: 0.3,
+    delayTime: 3,
+    depth: 0.08,
+    wet: 0.04,
+    node: null,
+  },
+
+  feedbackDelay: {
+    delayTime: '8n',
+    feedback: 0.12,
+    wet: 0.08,
+    node: null,
+  },
+
+  reverb: {
+    decay: 3.2,
+    preDelay: 0.015,
+    wet: 0.24,
+    node: null,
+  },
+
+  channel: {
+    volume: -10,
+    node: null,
+  },
 };
 
-function initBathSynth() {
-  synth.synth.node = new Tone.Synth(synth.synth);
-  synth.eq.node = new Tone.EQ3({ low: 2, mid: -2, high: -3 }); // «корпус» инструмента
-  synth.chorus.node = new Tone.Chorus(2, 2.5, 0.2).start(); // лёгкая «ширина»
-  synth.reverb.node = new Tone.Reverb({ decay: 1.5, wet: 0.2 });
+async function initBathSynth() {
+  synth.synth.node = new Tone.FMSynth(synth.synth);
+  synth.filter.node = new Tone.Filter(synth.filter);
+  synth.chorus.node = new Tone.Chorus(synth.chorus).start();
+  synth.feedbackDelay.node = new Tone.FeedbackDelay(synth.feedbackDelay);
+  synth.reverb.node = new Tone.Reverb(synth.reverb);
+  synth.channel.node = new Tone.Channel(synth.channel);
+
+  await synth.reverb.node.ready;
 
   synth.synth.node.chain(
-    synth.eq.node,
+    synth.filter.node,
     synth.chorus.node,
+    synth.feedbackDelay.node,
     synth.reverb.node,
+    synth.channel.node,
     Tone.Destination
   );
 }

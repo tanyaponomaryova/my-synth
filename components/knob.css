@@ -1,0 +1,73 @@
+/* ============ Knob: круглая ручка ============ */
+/* Работает с controls.js: тот пишет --value (0..1) и слушает мышь/палец.
+   Угол стрелки: от -135° (минимум) до +135° (максимум), 0° = «вверх».
+   Размер ручки задаёт родитель (width), форма всегда круг. */
+.Knob {
+  --value: 0;
+  --angle: calc(-135deg + var(--value) * 270deg);
+  --knob-bg: #d6d6d6;
+  --knob-mark: color-mix(in srgb, var(--knob-bg) 88%, #000);
+
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--knob-bg);
+  cursor: grab;
+  touch-action: none; /* палец крутит ручку, а не скроллит страницу */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.Knob:active {
+  cursor: grabbing;
+}
+
+.Knob:has(input:focus-visible) {
+  outline: 3px solid rgba(74, 144, 255, 0.6);
+  outline-offset: 3px;
+}
+
+.Knob-mark {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--angle));
+  pointer-events: none;
+}
+
+/* «Бомбочка»: полоса через весь диаметр, чуть выступает за края */
+.Knob-mark::before {
+  content: '';
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 38%;
+  height: 24%;
+  border-radius: 999px;
+  background: var(--knob-mark);
+}
+
+/* цвета синтов */
+.Knob--blue {
+  --knob-bg: var(--blue);
+}
+.Knob--pink {
+  --knob-bg: var(--pink);
+}
+.Knob--green {
+  --knob-bg: var(--green);
+}
+
+/* Маленькая серая ручка с риской у края (микшер барабанов) */
+.Knob--tick {
+  --knob-bg: #dcdcdc;
+  --knob-mark: #b9b9b9;
+}
+.Knob--tick .Knob-mark::before {
+  left: 44%;
+  right: auto;
+  top: 8%;
+  width: 12%;
+  height: 24%;
+}

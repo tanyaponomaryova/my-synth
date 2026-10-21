@@ -1,0 +1,106 @@
+/* ============ Bottle: флакон-регулятор эффекта ============ */
+/* Тянем по вертикали: уровень «жидкости» = значение (--value 0..1).
+   Логика -- в controls.js. Размеры в cqw ширины .Bath (905px макета). */
+
+/* группа из трёх флаконов одного цвета (один синт) */
+.FxGroup {
+  --c: var(--blue);
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45cqw;
+}
+.FxGroup--pink {
+  --c: var(--pink);
+}
+.FxGroup--green {
+  --c: var(--green);
+}
+
+.Bottle {
+  --value: 0;
+  position: relative;
+  width: var(--w);
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* три формы флаконов */
+.Bottle--reverb {
+  --w: 10cqw;
+  --h: 8.8cqw;
+}
+.Bottle--tremolo {
+  --w: 12cqw;
+  --h: 7.3cqw;
+}
+.Bottle--ppd {
+  --w: 5.8cqw;
+  --h: 13.4cqw;
+}
+
+/* помпа: стойка + носик, цвет жидкости */
+.Bottle-pump {
+  position: relative;
+  width: 3.2cqw;
+  height: 3.4cqw;
+  margin-left: 22%;
+}
+.Bottle-pump::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.8cqw;
+  border-radius: 0.5cqw;
+  background: var(--c);
+}
+.Bottle-pump::after {
+  content: '';
+  position: absolute;
+  left: 35%;
+  top: 0;
+  width: 130%;
+  height: 2cqw;
+  border-top: 0.8cqw solid var(--c);
+  border-left: 0.8cqw solid var(--c);
+  border-radius: 0.6cqw 0 0 0;
+}
+
+.Bottle-body {
+  position: relative;
+  height: var(--h);
+  overflow: hidden;
+  border-radius: 1.3cqw;
+  background: var(--grey-200);
+}
+
+.Bottle-liquid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--value) * 100%);
+  background: var(--c);
+  transition: height 0.06s linear;
+}
+
+.Bottle-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 22%;
+  text-align: center;
+  font-family: var(--font-script);
+  font-size: 3.2cqw;
+  line-height: 1;
+  color: #fff;
+  pointer-events: none;
+}
+
+.Bottle:has(input:focus-visible) {
+  outline: 3px solid rgba(74, 144, 255, 0.6);
+  outline-offset: 3px;
+}

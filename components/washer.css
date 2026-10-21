@@ -1,0 +1,143 @@
+/* ============ Стиральная машина: утки, бомбочки, барабан play/pause ============ */
+/* Система координат: 425 x 750. 1cqw = 4.25px макета. */
+.Washer {
+  position: relative;
+  width: 92.4%;
+  margin-left: auto;
+  margin-top: 9.8%; /* место под уток, которые «выглядывают» над крышкой */
+  aspect-ratio: 425 / 750;
+  background: var(--grey-200);
+  border-radius: 11.8% / 6.7%;
+  container-type: inline-size;
+}
+
+.Washer-ducks {
+  position: absolute;
+  left: 33.4cqw;
+  top: -10.6cqw;
+  width: 60.7cqw;
+  height: auto;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* крышка: дуга-линия под утками */
+.Washer-lid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 41.2cqw;
+  height: 25cqw;
+  border-top: 2.2cqw solid #d3d3d3;
+  border-radius: 11.8cqw 11.8cqw 0 0;
+}
+
+/* три «бомбочки» */
+.Washer-bombs {
+  position: absolute;
+  left: 17.6cqw;
+  right: 11.8cqw;
+  top: 53.5cqw;
+  display: flex;
+  justify-content: space-between;
+}
+.Washer-bombs .Knob {
+  width: 17.6cqw;
+}
+
+/* --- Большая кнопка-барабан: #startButton (play / pause) --- */
+.DrumButton {
+  position: absolute;
+  left: 19.4cqw;
+  top: 82cqw;
+  width: 64.7cqw;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink-soft);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.DrumButton::before {
+  content: '';
+  position: absolute;
+  inset: 9.1%;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.DrumButton:focus-visible {
+  outline: 3px solid rgba(74, 144, 255, 0.7);
+  outline-offset: 4px;
+}
+.DrumButton:disabled {
+  opacity: 0.6;
+  cursor: progress; /* идёт загрузка сэмплов и эффектов */
+}
+
+/* иконка: по умолчанию ▶ (на паузе), при .is-playing -- две полоски ⏸ */
+.DrumButton-icon {
+  position: relative;
+  width: 10.6cqw;
+  height: 12.7cqw;
+  margin-left: 1.2cqw; /* оптическое выравнивание треугольника */
+  background: #d9d9d9;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.DrumButton.is-playing .DrumButton-icon {
+  margin-left: 0;
+  background: none;
+  clip-path: none;
+}
+.DrumButton-icon::before,
+.DrumButton-icon::after {
+  content: '';
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 44%;
+  border-radius: 1.5cqw;
+  background: #d9d9d9;
+}
+.DrumButton-icon::before {
+  left: 0;
+}
+.DrumButton-icon::after {
+  right: 0;
+}
+.DrumButton.is-playing .DrumButton-icon::before,
+.DrumButton.is-playing .DrumButton-icon::after {
+  display: block;
+}
+
+/* --- Мелкие элементы нижнего ряда --- */
+.Washer-play {
+  position: absolute;
+  left: 17.6cqw;
+  top: 150cqw;
+  width: 10.6cqw;
+  height: 11.3cqw;
+  background: #c8c8c8;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  pointer-events: none;
+}
+
+.StopButton {
+  position: absolute;
+  left: 75cqw;
+  top: 150.6cqw;
+  width: 10.8cqw;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #c8c8c8;
+  cursor: pointer;
+}
+.StopButton:focus-visible {
+  outline: 3px solid rgba(74, 144, 255, 0.7);
+  outline-offset: 3px;
+}

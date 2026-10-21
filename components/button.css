@@ -1,0 +1,19 @@
+/* ============ Базовый сброс для кнопок-переключателей ============ */
+/* Конкретный вид задают sequencer.css (ячейки) и curtain.css (осцилляторы). */
+.ToggleButton {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ToggleButton:focus-visible {
+  outline: 2px solid #4a90ff;
+  outline-offset: 2px;
+}

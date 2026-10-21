@@ -1,0 +1,71 @@
+/* ============ Slider: горизонтальный ползунок (BPM, VOLUME) ============ */
+/* Размеры в cqw: 1cqw = 1% ширины ближайшего контейнера (.TowelRail),
+   поэтому ползунок масштабируется вместе с макетом. */
+.Slider {
+  --slider-track: #c9c9c9;
+  --slider-thumb: #cfcfcf;
+  --slider-thumb-size: 9.6cqw;
+  --slider-track-height: 0.7cqw;
+}
+
+.Slider input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: var(--slider-thumb-size);
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y; /* горизонтальный жест забирает ползунок, вертикальный скроллит страницу */
+}
+
+/* --- WebKit / Blink --- */
+.Slider input[type='range']::-webkit-slider-runnable-track {
+  height: var(--slider-track-height);
+  border-radius: 1cqw;
+  background: var(--slider-track);
+}
+.Slider input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  margin-top: calc((var(--slider-track-height) - var(--slider-thumb-size)) / 2);
+  border: 0;
+  border-radius: 50%;
+  background: var(--slider-thumb);
+}
+
+/* --- Firefox --- */
+.Slider input[type='range']::-moz-range-track {
+  height: var(--slider-track-height);
+  border-radius: 1cqw;
+  background: var(--slider-track);
+}
+.Slider input[type='range']::-moz-range-thumb {
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  border: 0;
+  border-radius: 50%;
+  background: var(--slider-thumb);
+}
+
+/* фокус с клавиатуры */
+.Slider input[type='range']:focus-visible {
+  outline: none;
+}
+.Slider input[type='range']:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 0.7cqw rgba(74, 144, 255, 0.45);
+}
+.Slider input[type='range']:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 0.7cqw rgba(74, 144, 255, 0.45);
+}
+
+/* подпись над ползунком */
+.Slider .title {
+  font-family: var(--font-label);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+  user-select: none;
+}

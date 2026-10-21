@@ -2,15 +2,25 @@
 // Привязка ползунка: ставит начальное значение, применяет его и слушает input.
 // Принимает id или сам элемент. onChange получает уже число.
 function bindSlider(idOrElement, initialValue, onChange) {
-  const slider =
+  const el =
     typeof idOrElement === 'string'
       ? document.getElementById(idOrElement)
       : idOrElement;
-  if (!slider) {
+  if (!el) {
     console.warn('Ползунок не найден:', idOrElement);
     return;
   }
+  // id может стоять на обёртке (.Slider, .Knob): тогда берём input внутри неё
+  const slider = el.matches('input')
+    ? el
+    : el.querySelector('input[type="range"]');
+  if (!slider) {
+    console.warn('Внутри нет input[type="range"]:', idOrElement);
+    return;
+  }
   slider.value = initialValue;
+  // сообщаем ручкам и флаконам, что значение изменено из кода (обновить вид)
+  slider.dispatchEvent(new Event('valuesync', { bubbles: true }));
   onChange(initialValue);
   slider.addEventListener('input', (e) => onChange(Number(e.target.value)));
 }
@@ -541,59 +551,44 @@ const synth2 = {
     node: null,
   },
   sequence: [
+    // Такт 1
     {
-      time: '0:1:0',
-      noteName: 'D5',
-      duration: '8n',
-      velocity: 1,
+      time: '0:0:0',
+      noteName: 'G3',
+      duration: '2n',
+      velocity: 0.35,
     },
     {
-      time: '0:1:2',
-      noteName: 'E5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '0:2:2',
-      noteName: 'D5',
-      duration: '8n',
-      velocity: 1,
+      time: '0:2:0',
+      noteName: 'D4',
+      duration: '4n',
+      velocity: 0.25,
     },
     {
       time: '0:3:0',
-      noteName: 'C5',
-      duration: '8n',
-      velocity: 1,
+      noteName: 'G4',
+      duration: '4n',
+      velocity: 0.3,
     },
+
+    // Такт 2
     {
-      time: '1:0:2',
-      noteName: 'E5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '1:1:2',
-      noteName: 'C5',
-      duration: '8n',
-      velocity: 1,
+      time: '1:0:0',
+      noteName: 'E3',
+      duration: '2n',
+      velocity: 0.35,
     },
     {
       time: '1:2:0',
-      noteName: 'A4',
-      duration: '8n',
-      velocity: 1,
+      noteName: 'B3',
+      duration: '4n',
+      velocity: 0.25,
     },
     {
       time: '1:3:0',
-      noteName: 'G5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '1:3:2',
-      noteName: 'A5',
-      duration: '8n',
-      velocity: 1,
+      noteName: 'E4',
+      duration: '4n',
+      velocity: 0.3,
     },
   ],
   loop: '2m',
@@ -623,13 +618,7 @@ async function initSynth2() {
 
 // #region SYNTH 3
 const synth3 = {
-  // Подсказки по настройке:
-  // - Чтобы мелодия была слышна чётче, поднимите bandpass.Q до 10–14
-  //   (шум станет «свистящим», менее водяным).
-  // - Чтобы было больше «шума» и меньше мелодии, опустите Q до 2–3.
-  // - Чтобы пена шуршала сильнее, поднимите foam.volume до -24.
-  // - Чтобы волны качались медленнее и глубже, tremolo1: commonFx.tremolo.frequency 0.1.
-  // - Ещё бархатнее: lowpass.frequency 1200.
+  // Основной звук — мелодия
   synth: {
     harmonicity: 3.99,
     modulationIndex: 1.5,
@@ -637,147 +626,101 @@ const synth3 = {
       type: 'sine',
     },
     envelope: {
-      attack: 0.002,
-      decay: 0.9,
-      sustain: 0,
-      release: 0.9,
+      attack: 0.02,
+      decay: 0.8,
+      sustain: 0.15,
+      release: 1.0,
     },
     modulation: {
       type: 'sine',
     },
     modulationEnvelope: {
-      attack: 0.002,
+      attack: 0.01,
       decay: 0.15,
       sustain: 0,
       release: 0.2,
     },
     node: null,
   },
-  // узкий фильтр, который настраивается на ноту — отвечает за мелодию
+
+  // Фильтр мелодии — сохраняем читаемость нот
   bandpass: {
     type: 'bandpass',
     frequency: 440,
-    Q: 2,
+    Q: 1.2,
     rolloff: -12,
     node: null,
   },
-  // бархат: срезаем всё острое
+
+  // Мягкий верхний срез
   lowpass: {
     type: 'lowpass',
-    frequency: 1800,
-    Q: 0.3,
+    frequency: 2200,
+    Q: 0.4,
     rolloff: -24,
     node: null,
   },
+
   chorus: {
-    frequency: 0.6,
+    frequency: 0.5,
     delayTime: 18,
-    depth: 0.6,
-    wet: 0.45,
+    depth: 0.35,
+    wet: 0.2,
     node: null,
   },
 
-  // tremolo и reverb теперь общие (connectCommonFx), здесь только стартовое положение их ползунков (amount)
-  amount: {
-    tremolo: 0.5, // медленные «волны» — громкость плавно качается
-    pingPongDelay: 0,
-    reverb: 0.45,
+  // Фоновый розовый шум моря
+  seaNoise: {
+    type: 'pink',
+    volume: -10, // dB: тихий, но различимый фон
+    node: null,
+    gain: null,
   },
+
+  // Медленное изменение фильтра шума
+  filterLfo: {
+    frequency: 0.035,
+    min: 500,
+    max: 1100,
+    node: null,
+  },
+
+  // Общие эффекты
+  amount: {
+    tremolo: 0.2,
+    pingPongDelay: 0,
+    reverb: 0.25,
+  },
+
+  // Громкость канала
   channel: {
     volume: -100,
     node: null,
   },
-  // скольжение фильтра между нотами (сек) — чем больше, тем «водянистее»
+
   glide: 0.08,
+
+  // Одна последовательность — без повторного объявления
   sequence: [
-    {
-      time: '0:0:0',
-      noteName: 'C3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '0:1:0',
-      noteName: 'D3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '0:2:0',
-      noteName: 'E3',
-      duration: '2n',
-      velocity: 1,
-    },
-    {
-      time: '1:0:0',
-      noteName: 'A3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '1:1:0',
-      noteName: 'G3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '1:2:0',
-      noteName: 'E3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '1:3:0',
-      noteName: 'D3',
-      duration: '4n',
-      velocity: 1,
-    },
+    { time: '0:0:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
+    { time: '0:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
+    { time: '0:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
 
-    // повтор чуть иначе
+    { time: '1:0:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
+    { time: '1:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
+    { time: '1:2:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
+    { time: '1:3:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
 
-    {
-      time: '2:0:0',
-      noteName: 'C3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '2:1:0',
-      noteName: 'D3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '2:2:0',
-      noteName: 'E3',
-      duration: '2n',
-      velocity: 1,
-    },
-    {
-      time: '3:0:0',
-      noteName: 'A3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '3:1:0',
-      noteName: 'G3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '3:2:0',
-      noteName: 'C3',
-      duration: '4n',
-      velocity: 1,
-    },
-    {
-      time: '3:3:0',
-      noteName: 'E3',
-      duration: '4n',
-      velocity: 1,
-    },
+    { time: '2:0:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
+    { time: '2:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
+    { time: '2:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+
+    { time: '3:0:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
+    { time: '3:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
+    { time: '3:2:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
+    { time: '3:3:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
   ],
+
   loop: '4m',
 };
 
@@ -787,19 +730,48 @@ async function initSynth3() {
   synth3.bandpass.node = new Tone.Filter(synth3.bandpass);
   synth3.lowpass.node = new Tone.Filter(synth3.lowpass);
   synth3.chorus.node = new Tone.Chorus(synth3.chorus).start();
+
+  // Цепочка мелодии
   synth3.synth.node.chain(
     synth3.bandpass.node,
     synth3.lowpass.node,
     synth3.chorus.node
   );
 
-  // общая часть
+  // Розовый шум моря
+  synth3.seaNoise.node = new Tone.Noise('pink');
+
+  // ВАЖНО: Gain принимает линейную громкость, а не dB
+  const noiseLinearGain = Math.pow(10, synth3.seaNoise.volume / 20);
+
+  synth3.seaNoise.gain = new Tone.Gain(noiseLinearGain);
+
+  synth3.seaNoise.node.connect(synth3.seaNoise.gain);
+
+  // Шум проходит через фильтр, но не через фильтр мелодии
+  synth3.seaNoise.gain.connect(synth3.lowpass.node);
+
+  synth3.seaNoise.node.start();
+
+  // Плавное движение фильтра — эффект морских волн
+  synth3.filterLfo.node = new Tone.LFO({
+    frequency: synth3.filterLfo.frequency,
+    min: synth3.filterLfo.min,
+    max: synth3.filterLfo.max,
+    type: 'sine',
+  });
+
+  synth3.filterLfo.node.connect(synth3.lowpass.node.frequency);
+
+  synth3.filterLfo.node.start();
+
+  // Общие эффекты проекта
   await connectCommonFx(synth3, synth3.chorus.node);
 
-  // мелодия: настраиваем фильтр на ноту, затем запускаем шум
+  // Запуск мелодии
   startPart(synth3, (time, note) => {
     synth3.synth.node.triggerAttackRelease(
-      note.noteName, // строка или массив, PolySynth понимает оба варианта
+      note.noteName,
       note.duration,
       time,
       note.velocity
@@ -830,8 +802,10 @@ async function initAll() {
   await Tone.loaded(); // ждём загрузки сэмплов
 }
 
+// Иконку play/pause рисует CSS (.DrumButton.is-playing), текст кнопки не трогаем
 function setPlayButtonText(button, isPlaying) {
-  button.textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+  button.classList.toggle('is-playing', isPlaying);
+  button.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
