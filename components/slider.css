@@ -1,12 +1,17 @@
-/* ============ Slider: горизонтальный ползунок (BPM, VOLUME) ============ */
-/* Размеры в cqw: 1cqw = 1% ширины ближайшего контейнера (.TowelRail),
-   поэтому ползунок масштабируется вместе с макетом. */
+/* ============ Slider: горизонтальный ползунок (BPM, VOLUME, UI) ============ */
+/* Ползунок -- носок (SVG в data-URI). Размеры в cqw: 1cqw = 1% ширины .TowelRail. */
 .Slider {
   --slider-track: #c9c9c9;
-  --slider-thumb: #cfcfcf;
-  --slider-thumb-size: 9.6cqw;
+  --slider-thumb-size: 13cqw; /* высота носка */
+  --slider-thumb-width: 10.4cqw;
   --slider-track-height: 0.7cqw;
+  --sock-pink: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 80'><path d='M16 4H46V46C46 52 51 55 57 60C64 66 61 78 48 78H20C9 78 5 68 10 61C14 56 16 52 16 44Z' fill='%234a4a4a'/><path d='M48 78C61 78 64 66 57 60L50 66C52 71 51 75 48 78Z' fill='%23fb9fe0'/><path d='M10 61C5 68 9 78 20 78L22 70C16 70 14 66 16 62Z' fill='%23fb9fe0'/><rect x='16' y='4' width='30' height='15' rx='3' fill='%23383838'/><rect x='16' y='8' width='30' height='3' fill='%23fb9fe0'/><rect x='16' y='13' width='30' height='3' fill='%23fb9fe0'/></svg>");
+  --sock-blue: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 80'><path d='M16 4H46V46C46 52 51 55 57 60C64 66 61 78 48 78H20C9 78 5 68 10 61C14 56 16 52 16 44Z' fill='%234a4a4a'/><path d='M48 78C61 78 64 66 57 60L50 66C52 71 51 75 48 78Z' fill='%23b6d0ff'/><path d='M10 61C5 68 9 78 20 78L22 70C16 70 14 66 16 62Z' fill='%23b6d0ff'/><rect x='16' y='4' width='30' height='15' rx='3' fill='%23383838'/><rect x='16' y='8' width='30' height='3' fill='%23b6d0ff'/><rect x='16' y='13' width='30' height='3' fill='%23b6d0ff'/></svg>");
+  --sock-green: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 80'><path d='M16 4H46V46C46 52 51 55 57 60C64 66 61 78 48 78H20C9 78 5 68 10 61C14 56 16 52 16 44Z' fill='%234a4a4a'/><path d='M48 78C61 78 64 66 57 60L50 66C52 71 51 75 48 78Z' fill='%23bdff5a'/><path d='M10 61C5 68 9 78 20 78L22 70C16 70 14 66 16 62Z' fill='%23bdff5a'/><rect x='16' y='4' width='30' height='15' rx='3' fill='%23383838'/><rect x='16' y='8' width='30' height='3' fill='%23bdff5a'/><rect x='16' y='13' width='30' height='3' fill='%23bdff5a'/></svg>");
+  --sock: var(--sock-pink);
 }
+#bpmSlider { --sock: var(--sock-blue); }
+#uiVolume { --sock: var(--sock-green); }
 
 .Slider input[type='range'] {
   -webkit-appearance: none;
@@ -17,7 +22,7 @@
   margin: 0;
   background: transparent;
   cursor: pointer;
-  touch-action: pan-y; /* горизонтальный жест забирает ползунок, вертикальный скроллит страницу */
+  touch-action: pan-y;
 }
 
 /* --- WebKit / Blink --- */
@@ -28,12 +33,17 @@
 }
 .Slider input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: var(--slider-thumb-size);
+  width: var(--slider-thumb-width);
   height: var(--slider-thumb-size);
   margin-top: calc((var(--slider-track-height) - var(--slider-thumb-size)) / 2);
   border: 0;
-  border-radius: 50%;
-  background: var(--slider-thumb);
+  border-radius: 0;
+  background: var(--sock) center / contain no-repeat;
+  filter: drop-shadow(0 0.5cqw 0.5cqw rgba(0, 0, 0, 0.22));
+  transition: transform 0.15s;
+}
+.Slider input[type='range']:active::-webkit-slider-thumb {
+  transform: rotate(-10deg) scale(1.07);
 }
 
 /* --- Firefox --- */
@@ -43,22 +53,25 @@
   background: var(--slider-track);
 }
 .Slider input[type='range']::-moz-range-thumb {
-  width: var(--slider-thumb-size);
+  width: var(--slider-thumb-width);
   height: var(--slider-thumb-size);
   border: 0;
-  border-radius: 50%;
-  background: var(--slider-thumb);
+  border-radius: 0;
+  background: var(--sock) center / contain no-repeat;
+  filter: drop-shadow(0 0.5cqw 0.5cqw rgba(0, 0, 0, 0.22));
+  transition: transform 0.15s;
+}
+.Slider input[type='range']:active::-moz-range-thumb {
+  transform: rotate(-10deg) scale(1.07);
 }
 
-/* фокус с клавиатуры */
-.Slider input[type='range']:focus-visible {
-  outline: none;
-}
+/* фокус с клавиатуры: подсвечиваем носок */
+.Slider input[type='range']:focus-visible { outline: none; }
 .Slider input[type='range']:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 0.7cqw rgba(74, 144, 255, 0.45);
+  filter: drop-shadow(0 0 0.9cqw rgba(74, 144, 255, 0.95));
 }
 .Slider input[type='range']:focus-visible::-moz-range-thumb {
-  box-shadow: 0 0 0 0.7cqw rgba(74, 144, 255, 0.45);
+  filter: drop-shadow(0 0 0.9cqw rgba(74, 144, 255, 0.95));
 }
 
 /* подпись над ползунком */

@@ -78,6 +78,7 @@ function startPart(synth, callback) {
 const master = {
   volume: 0, // громкость в dB: 0 = без ослабления
   node: null,
+  meter: null, // измеритель уровня: от него зависит количество пены в стиралке
 };
 
 const globalSettings = {
@@ -86,7 +87,18 @@ const globalSettings = {
 
 function initMaster() {
   master.node = new Tone.Volume(master.volume).toDestination();
+  master.meter = new Tone.Meter({ smoothing: 0.8 });
+  master.node.connect(master.meter);
 }
+
+// Для washer.js: общая громкость 0..1 (-60 dB -> 0, -10 dB -> 1)
+window.synthAudio = {
+  getLevel() {
+    if (!master.meter) return 0;
+    const db = master.meter.getValue();
+    return Math.min(1, Math.max(0, (db + 60) / 50)) || 0;
+  },
+};
 
 function initMasterUI() {
   bindSlider('bpmSlider', globalSettings.bpm, (v) => {
@@ -979,6 +991,10 @@ async function initAll() {
 function setPlayButtonText(button, isPlaying) {
   button.classList.toggle('is-playing', isPlaying);
   button.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+  // стиральная машина (washer.js) крутится, пока играет музыка
+  document.dispatchEvent(
+    new CustomEvent('playstatechange', { detail: { playing: isPlaying } })
+  );
 }
 
 document.addEventListener('DOMContentLoaded', () => {

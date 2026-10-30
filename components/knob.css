@@ -71,3 +71,18 @@
   width: 12%;
   height: 24%;
 }
+
+/* Чёрточка на одном (правом) конце «бомбочки»: однозначно показывает, куда повёрнута ручка */
+.Bomb .Knob {
+  --knob-tick: color-mix(in srgb, var(--knob-bg) 45%, #000);
+}
+.Bomb .Knob-mark::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 38%;
+  height: 24%;
+  background: linear-gradient(var(--knob-tick), var(--knob-tick)) 95% 50% / 5% 62% no-repeat;
+  border-radius: 999px;
+}

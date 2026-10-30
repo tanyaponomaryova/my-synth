@@ -54,7 +54,94 @@
   width: 88.2cqw;
   height: 27.3cqw;
   border-radius: 3cqw;
-  background: var(--water);
+  overflow: hidden;
+  /* четыре цветовых пятна медленно плавают по воде; под ними базовый градиент,
+     поэтому все четыре цвета видны одновременно и лишь меняются местами */
+  background:
+    radial-gradient(ellipse 60% 140% at var(--w1x) var(--w1y), #e6e4fa 0%, #e6e4fa00 100%),
+    radial-gradient(ellipse 60% 140% at var(--w2x) var(--w2y), #75c6da 0%, #75c6da00 100%),
+    radial-gradient(ellipse 60% 140% at var(--w3x) var(--w3y), #4544ff 0%, #4544ff00 100%),
+    radial-gradient(ellipse 60% 140% at var(--w4x) var(--w4y), #d8a1ff 0%, #d8a1ff00 100%),
+    linear-gradient(100deg, #e6e4fa, #75c6da 35%, #4544ff 65%, #d8a1ff);
+  animation:
+    water-1 19s ease-in-out infinite,
+    water-2 23s ease-in-out infinite,
+    water-3 27s ease-in-out infinite,
+    water-4 17s ease-in-out infinite;
+}
+
+/* слой 1: медленно вращающийся «водоворот» из тех же четырёх цветов (все цвета остаются в кадре) */
+.Water::before {
+  content: '';
+  position: absolute;
+  inset: -60%;
+  background: conic-gradient(from var(--swirl), #e6e4fa, #75c6da, #4544ff, #d8a1ff, #e6e4fa);
+  opacity: 0.45;
+  filter: blur(6cqw);
+  mix-blend-mode: soft-light;
+  animation: water-swirl 40s linear infinite;
+}
+/* слой 2: бегущие блики, как свет на ряби */
+.Water::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    repeating-linear-gradient(115deg, transparent 0 7cqw, rgba(255, 255, 255, 0.22) 9cqw, transparent 12cqw),
+    repeating-linear-gradient(75deg, transparent 0 11cqw, rgba(255, 255, 255, 0.14) 13cqw, transparent 16cqw);
+  filter: blur(0.6cqw);
+  animation: water-glints 14s ease-in-out infinite alternate;
+}
+
+@property --swirl { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@property --w1x { syntax: '<percentage>'; inherits: false; initial-value: 10%; }
+@property --w1y { syntax: '<percentage>'; inherits: false; initial-value: 30%; }
+@property --w2x { syntax: '<percentage>'; inherits: false; initial-value: 35%; }
+@property --w2y { syntax: '<percentage>'; inherits: false; initial-value: 80%; }
+@property --w3x { syntax: '<percentage>'; inherits: false; initial-value: 65%; }
+@property --w3y { syntax: '<percentage>'; inherits: false; initial-value: 20%; }
+@property --w4x { syntax: '<percentage>'; inherits: false; initial-value: 90%; }
+@property --w4y { syntax: '<percentage>'; inherits: false; initial-value: 70%; }
+
+/* пятна ходят по всей площади и проходят друг сквозь друга */
+@keyframes water-1 {
+  0%, 100% { --w1x: 5%; --w1y: 20%; }
+  25% { --w1x: 70%; --w1y: 90%; }
+  50% { --w1x: 95%; --w1y: 10%; }
+  75% { --w1x: 30%; --w1y: 60%; }
+}
+@keyframes water-2 {
+  0%, 100% { --w2x: 40%; --w2y: 90%; }
+  25% { --w2x: 95%; --w2y: 50%; }
+  50% { --w2x: 20%; --w2y: 5%; }
+  75% { --w2x: 75%; --w2y: 35%; }
+}
+@keyframes water-3 {
+  0%, 100% { --w3x: 70%; --w3y: 10%; }
+  25% { --w3x: 10%; --w3y: 55%; }
+  50% { --w3x: 55%; --w3y: 95%; }
+  75% { --w3x: 95%; --w3y: 60%; }
+}
+@keyframes water-4 {
+  0%, 100% { --w4x: 95%; --w4y: 80%; }
+  25% { --w4x: 45%; --w4y: 5%; }
+  50% { --w4x: 5%; --w4y: 70%; }
+  75% { --w4x: 60%; --w4y: 95%; }
+}
+@keyframes water-swirl {
+  to { --swirl: 360deg; }
+}
+@keyframes water-glints {
+  from { transform: translateX(-6cqw); }
+  to { transform: translateX(6cqw) skewX(-8deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Water,
+  .Water::before,
+  .Water::after {
+    animation-duration: 120s;
+  }
 }
 
 .Person {

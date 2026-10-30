@@ -146,3 +146,111 @@
   outline: 3px solid rgba(74, 144, 255, 0.7);
   outline-offset: 3px;
 }
+
+/* --- Барабан внутри #startButton: крутится и пенится, пока играет музыка --- */
+.DrumGlass {
+  position: absolute;
+  inset: 13.5%;
+  display: block;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #2b333a;
+  box-shadow: inset 0 0 0 0.9cqw #5a5a5a, inset 0 0 3cqw rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+.DrumGlass-drum {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform; /* угол задаёт washer.js */
+}
+.DrumGlass-water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36%;
+  background: rgba(117, 198, 218, 0.55);
+}
+.DrumGlass-water::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 5cqw;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5Q12.5 0 25 5T50 5T75 5T100 5V10H0Z' fill='rgba(117,198,218,0.55)'/%3E%3C/svg%3E") 0 0 / 50% 100% repeat-x;
+  animation: wave-slide 3.2s linear infinite paused;
+}
+@keyframes wave-slide {
+  to { background-position-x: 100%; } /* сдвиг ровно на одну волну */
+}
+.DrumButton.is-playing .DrumGlass-water::before {
+  animation-play-state: running;
+}
+
+.DrumGlass-foam {
+  position: absolute;
+  inset: 0;
+}
+.Bubble {
+  position: absolute;
+  bottom: 22%;
+  left: var(--x);
+  width: var(--s);
+  aspect-ratio: 1;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.Bubble.is-on {
+  opacity: 1;
+}
+.Bubble i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff 0 12%, rgba(255, 255, 255, 0.35) 40%, rgba(255, 255, 255, 0.55) 100%);
+  box-shadow: inset 0 0 0 0.25cqw rgba(255, 255, 255, 0.7);
+  animation: foam-rise var(--d) ease-in infinite paused;
+  animation-delay: var(--delay);
+}
+.Bubble.is-on i {
+  animation-play-state: running;
+}
+@keyframes foam-rise {
+  0% { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(var(--dx), calc(var(--rise) * -1)) scale(1); opacity: 0; }
+}
+
+.DrumGlass-shine {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.32), transparent 38%),
+    rgba(20, 24, 28, 0.45); /* на паузе стекло затемнено, чтобы читалась иконка ▶ */
+  transition: background-color 0.4s, opacity 0.4s;
+}
+.DrumButton.is-playing .DrumGlass-shine {
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.32), transparent 38%),
+    transparent;
+}
+
+/* во время игры иконка паузы почти прозрачна, проявляется при наведении/фокусе */
+.DrumButton-icon {
+  z-index: 1;
+  transition: opacity 0.3s;
+}
+.DrumButton.is-playing .DrumButton-icon {
+  opacity: 0;
+}
+.DrumButton.is-playing:hover .DrumButton-icon,
+.DrumButton.is-playing:focus-visible .DrumButton-icon {
+  opacity: 0.8;
+}
+
+.Washer {
+  will-change: transform; /* тряску задаёт washer.js */
+}

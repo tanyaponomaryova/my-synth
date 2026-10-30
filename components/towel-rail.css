@@ -1,4 +1,4 @@
-/* ============ Полотенцесушитель: VOLUME, BPM, носки ============ */
+/* ============ Полотенцесушитель: VOLUME, BPM, FILTER (ползунки-носки) ============ */
 /* Макет рисуется в системе координат 460 x 360.
    Труба-змейка и носки -- SVG; ползунки позиционируются поверх по --y. */
 .TowelRail {
@@ -13,15 +13,6 @@
   inset: 0;
   width: 100%;
   height: 100%;
-}
-
-.TowelRail-socks {
-  position: absolute;
-  left: 44.1%;
-  top: 14.7%;
-  width: 46.7%;
-  height: auto;
-  pointer-events: none;
 }
 
 /* ползунок лежит на «своей» трубе: --y = координата центра в макете (из 360) */
@@ -43,7 +34,7 @@
 .TowelRail .Slider .title {
   position: absolute;
   left: 14%;
-  top: -6.1cqw;
+  top: -4.4cqw;
   font-size: 4.9cqw;
   color: #ececec;
 }
