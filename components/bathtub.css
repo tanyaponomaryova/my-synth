@@ -17,7 +17,7 @@
   width: 100%;
   height: 33.7cqw;
   border-radius: 4.4cqw;
-  background: linear-gradient(#5c5c5c 77.7%, #3a3a3a 77.7%);
+  /* background: linear-gradient(#5c5c5c 77.7%, #3a3a3a 77.7%); */
 }
 
 .FxShelf-title {
@@ -53,107 +53,308 @@
 .Water {
   position: absolute;
   left: 6.1cqw;
-  top: 42cqw;
+  top: 40cqw;
   width: 88.2cqw;
   height: 27.3cqw;
   border-radius: 3cqw;
   overflow: hidden;
+
   /* четыре цветовых пятна медленно плавают по воде; под ними базовый градиент,
      поэтому все четыре цвета видны одновременно и лишь меняются местами */
-  background:
-    radial-gradient(ellipse 60% 140% at var(--w1x) var(--w1y), #e6e4fa 0%, #e6e4fa00 100%),
-    radial-gradient(ellipse 60% 140% at var(--w2x) var(--w2y), #75c6da 0%, #75c6da00 100%),
-    radial-gradient(ellipse 60% 140% at var(--w3x) var(--w3y), #4544ff 0%, #4544ff00 100%),
-    radial-gradient(ellipse 60% 140% at var(--w4x) var(--w4y), #d8a1ff 0%, #d8a1ff00 100%),
+  /* background:
+    radial-gradient(
+      ellipse 60% 140% at var(--w1x) var(--w1y),
+      #e6e4fa 0%,
+      #e6e4fa00 100%
+    ),
+    radial-gradient(
+      ellipse 60% 140% at var(--w2x) var(--w2y),
+      #75c6da 0%,
+      #75c6da00 100%
+    ),
+    radial-gradient(
+      ellipse 60% 140% at var(--w3x) var(--w3y),
+      #4544ff 0%,
+      #4544ff00 100%
+    ),
+    radial-gradient(
+      ellipse 60% 140% at var(--w4x) var(--w4y),
+      #d8a1ff 0%,
+      #d8a1ff00 100%
+    ),
     linear-gradient(100deg, #e6e4fa, #75c6da 35%, #4544ff 65%, #d8a1ff);
+
   animation:
     water-1 19s ease-in-out infinite,
     water-2 23s ease-in-out infinite,
     water-3 27s ease-in-out infinite,
-    water-4 17s ease-in-out infinite;
+    water-4 17s ease-in-out infinite; */
 }
 
-/* слой 1: медленно вращающийся «водоворот» из тех же четырёх цветов (все цвета остаются в кадре) */
-.Water::before {
-  content: '';
-  position: absolute;
-  inset: -60%;
-  background: conic-gradient(from var(--swirl), #e6e4fa, #75c6da, #4544ff, #d8a1ff, #e6e4fa);
-  opacity: 0.45;
-  filter: blur(6cqw);
-  mix-blend-mode: soft-light;
-  animation: water-swirl 40s linear infinite;
-}
-/* слой 2: бегущие блики, как свет на ряби */
-.Water::after {
-  content: '';
-  position: absolute;
-  inset: -20%;
-  background:
-    repeating-linear-gradient(115deg, transparent 0 7cqw, rgba(255, 255, 255, 0.22) 9cqw, transparent 12cqw),
-    repeating-linear-gradient(75deg, transparent 0 11cqw, rgba(255, 255, 255, 0.14) 13cqw, transparent 16cqw);
-  filter: blur(0.6cqw);
-  animation: water-glints 14s ease-in-out infinite alternate;
-}
-
-@property --swirl { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
-@property --w1x { syntax: '<percentage>'; inherits: false; initial-value: 10%; }
-@property --w1y { syntax: '<percentage>'; inherits: false; initial-value: 30%; }
-@property --w2x { syntax: '<percentage>'; inherits: false; initial-value: 35%; }
-@property --w2y { syntax: '<percentage>'; inherits: false; initial-value: 80%; }
-@property --w3x { syntax: '<percentage>'; inherits: false; initial-value: 65%; }
-@property --w3y { syntax: '<percentage>'; inherits: false; initial-value: 20%; }
-@property --w4x { syntax: '<percentage>'; inherits: false; initial-value: 90%; }
-@property --w4y { syntax: '<percentage>'; inherits: false; initial-value: 70%; }
-
-/* пятна ходят по всей площади и проходят друг сквозь друга */
-@keyframes water-1 {
-  0%, 100% { --w1x: 5%; --w1y: 20%; }
-  25% { --w1x: 70%; --w1y: 90%; }
-  50% { --w1x: 95%; --w1y: 10%; }
-  75% { --w1x: 30%; --w1y: 60%; }
-}
-@keyframes water-2 {
-  0%, 100% { --w2x: 40%; --w2y: 90%; }
-  25% { --w2x: 95%; --w2y: 50%; }
-  50% { --w2x: 20%; --w2y: 5%; }
-  75% { --w2x: 75%; --w2y: 35%; }
-}
-@keyframes water-3 {
-  0%, 100% { --w3x: 70%; --w3y: 10%; }
-  25% { --w3x: 10%; --w3y: 55%; }
-  50% { --w3x: 55%; --w3y: 95%; }
-  75% { --w3x: 95%; --w3y: 60%; }
-}
-@keyframes water-4 {
-  0%, 100% { --w4x: 95%; --w4y: 80%; }
-  25% { --w4x: 45%; --w4y: 5%; }
-  50% { --w4x: 5%; --w4y: 70%; }
-  75% { --w4x: 60%; --w4y: 95%; }
-}
-@keyframes water-swirl {
-  to { --swirl: 360deg; }
-}
-@keyframes water-glints {
-  from { transform: translateX(-6cqw); }
-  to { transform: translateX(6cqw) skewX(-8deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .Water,
-  .Water::before,
-  .Water::after {
-    animation-duration: 120s;
+@keyframes ani-water {
+  0% {
+    --c-0: hsla(289, 100%, 73%, 1);
+    --x-0: 85%;
+    --y-0: 80%;
+    --s-start-0: 9%;
+    --s-end-0: 55%;
+    --c-1: hsla(191, 57%, 65%, 1);
+    --x-1: 60%;
+    --y-1: 24%;
+    --s-start-1: 5%;
+    --s-end-1: 72%;
+    --c-2: hsla(240, 100%, 63%, 1);
+    --x-2: 13%;
+    --y-2: 82%;
+    --s-start-2: 5%;
+    --s-end-2: 52%;
+    --c-3: hsla(275, 100%, 76%, 1);
+    --x-3: 24%;
+    --y-3: 7%;
+    --s-start-3: 13%;
+    --s-end-3: 125%;
+    --c-4: hsla(257, 96%, 83%, 1);
+    --x-4: 24%;
+    --y-4: 7%;
+    --s-start-4: 13%;
+    --s-end-4: 125%;
   }
+
+  100% {
+    --c-0: hsla(173, 100%, 78%, 1);
+    --x-0: 31%;
+    --y-0: 94%;
+    --s-start-0: 9%;
+    --s-end-0: 55%;
+    --c-1: hsla(219, 100%, 68%, 1);
+    --x-1: 2%;
+    --y-1: 25%;
+    --s-start-1: 5%;
+    --s-end-1: 72%;
+    --c-2: hsla(297, 100%, 65%, 1);
+    --x-2: 98%;
+    --y-2: 20%;
+    --s-start-2: 5%;
+    --s-end-2: 52%;
+    --c-3: rgb(159, 198, 229);
+    --x-3: 95%;
+    --y-3: 92%;
+    --s-start-3: 13%;
+    --s-end-3: 68%;
+    --c-4: hsla(244, 71%, 68%, 1);
+    --x-4: 95%;
+    --y-4: 92%;
+    --s-start-4: 13%;
+    --s-end-4: 68%;
+  }
+}
+
+@property --c-0 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: hsla(289, 100%, 73%, 1);
+}
+
+@property --x-0 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 85%;
+}
+
+@property --y-0 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 80%;
+}
+
+@property --s-start-0 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 9%;
+}
+
+@property --s-end-0 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 55%;
+}
+
+@property --c-1 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: hsla(191, 57%, 65%, 1);
+}
+
+@property --x-1 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 60%;
+}
+
+@property --y-1 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 24%;
+}
+
+@property --s-start-1 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 5%;
+}
+
+@property --s-end-1 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 72%;
+}
+
+@property --c-2 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: hsla(240, 100%, 63%, 1);
+}
+
+@property --x-2 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 13%;
+}
+
+@property --y-2 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 82%;
+}
+
+@property --s-start-2 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 5%;
+}
+
+@property --s-end-2 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 52%;
+}
+
+@property --c-3 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: hsla(275, 100%, 76%, 1);
+}
+
+@property --x-3 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 24%;
+}
+
+@property --y-3 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 7%;
+}
+
+@property --s-start-3 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 13%;
+}
+
+@property --s-end-3 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 125%;
+}
+
+@property --c-4 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: hsla(257, 96%, 83%, 1);
+}
+
+@property --x-4 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 24%;
+}
+
+@property --y-4 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 7%;
+}
+
+@property --s-start-4 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 13%;
+}
+
+@property --s-end-4 {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 125%;
+}
+
+.Water {
+  --c-0: hsla(289, 100%, 73%, 1);
+  --x-0: 85%;
+  --y-0: 80%;
+  --c-1: rgb(152, 228, 245);
+  --x-1: 60%;
+  --y-1: 24%;
+  --c-2: hsla(240, 100%, 63%, 1);
+  --x-2: 13%;
+  --y-2: 82%;
+  --c-3: hsla(275, 100%, 76%, 1);
+  --x-3: 24%;
+  --y-3: 7%;
+  --c-4: hsla(257, 96%, 83%, 1);
+  --x-4: 24%;
+  --y-4: 7%;
+  background-color: hsla(221, 100%, 62%, 1);
+  background-image:
+    radial-gradient(
+      circle at var(--x-0) var(--y-0),
+      var(--c-0) var(--s-start-0),
+      transparent var(--s-end-0)
+    ),
+    radial-gradient(
+      circle at var(--x-1) var(--y-1),
+      var(--c-1) var(--s-start-1),
+      transparent var(--s-end-1)
+    ),
+    radial-gradient(
+      circle at var(--x-2) var(--y-2),
+      var(--c-2) var(--s-start-2),
+      transparent var(--s-end-2)
+    ),
+    radial-gradient(
+      circle at var(--x-3) var(--y-3),
+      var(--c-3) var(--s-start-3),
+      transparent var(--s-end-3)
+    ),
+    radial-gradient(
+      circle at var(--x-4) var(--y-4),
+      var(--c-4) var(--s-start-4),
+      transparent var(--s-end-4)
+    );
+  animation: ani-water 5s linear infinite alternate;
+  background-blend-mode: normal, normal, normal, normal, normal;
+  will-change: transform, opacity;
+  contain: paint;
 }
 
 .Person {
   position: absolute;
   /* guy.svg (1283 x 524) лежит в тех же координатах, что и ванна:
      сдвиг -100 ед. вверх от верха ванны, нижний край фигуры = низ воды */
-  left: 0;
-  top: 28.06cqw;
-  width: 100.63cqw;
+  left: -1cqw;
+  top: 16.06cqw;
+  width: 105.63cqw;
   max-width: none;
   height: auto;
   pointer-events: none;
@@ -168,7 +369,6 @@
   width: 88.2cqw;
   height: 27.3cqw;
   border-radius: 3cqw;
-  overflow: hidden;
+  /* overflow: hidden; */
   cursor: pointer;
 }
-

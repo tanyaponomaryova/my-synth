@@ -16,6 +16,16 @@
   --c: var(--green);
 }
 
+.Shelf {
+  width: 100%;
+  height: 4cqw;
+  position: absolute;
+  bottom: 15%;
+  border-radius: 4cqw;
+  background: var(--grey-300);
+  z-index: -1;
+}
+
 .Bottle {
   --value: 0;
   position: relative;

@@ -2,34 +2,24 @@
 /* Система координат: 425 x 750. 1cqw = 4.25px макета. */
 .Washer {
   position: relative;
-  width: 92.4%;
-  margin-left: auto;
-  margin-top: 9.8%; /* место под уток, которые «выглядывают» над крышкой */
-  aspect-ratio: 425 / 750;
+  /* width: 92.4%; */
+  /* margin-left: auto; */
+  margin-top: 9.8%;
+  aspect-ratio: 550 / 875;
   background: var(--grey-200);
-  border-radius: 11.8% / 6.7%;
+  border-radius: 2vw;
   container-type: inline-size;
 }
 
-.Washer-ducks {
-  position: absolute;
-  left: 33.4cqw;
-  top: -10.6cqw;
-  width: 60.7cqw;
-  height: auto;
-  z-index: 2;
-  pointer-events: none;
-}
+.Washer-side-bg {
+  background-color: var(--grey-100);
+  width: 100%;
+  height: 90%;
+  border-radius: inherit;
 
-/* крышка: дуга-линия под утками */
-.Washer-lid {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 41.2cqw;
-  height: 25cqw;
-  border-top: 2.2cqw solid #d3d3d3;
-  border-radius: 11.8cqw 11.8cqw 0 0;
+  bottom: 0;
+  z-index: -1;
 }
 
 /* три «бомбочки» */
@@ -37,7 +27,7 @@
   position: absolute;
   left: 17.6cqw;
   right: 11.8cqw;
-  top: 53.5cqw;
+  top: 30.5cqw;
   display: flex;
   justify-content: space-between;
 }
@@ -54,7 +44,7 @@
 .DrumButton {
   position: absolute;
   left: 19.4cqw;
-  top: 82cqw;
+  top: 66cqw;
   width: 64.7cqw;
   aspect-ratio: 1;
   display: grid;
@@ -155,7 +145,9 @@
   border-radius: 50%;
   overflow: hidden;
   background: #2b333a;
-  box-shadow: inset 0 0 0 0.9cqw #5a5a5a, inset 0 0 3cqw rgba(0, 0, 0, 0.6);
+  box-shadow:
+    inset 0 0 0 0.9cqw #5a5a5a,
+    inset 0 0 3cqw rgba(0, 0, 0, 0.6);
   pointer-events: none;
 }
 .DrumGlass-drum {
@@ -180,11 +172,14 @@
   right: 0;
   bottom: 100%;
   height: 5cqw;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5Q12.5 0 25 5T50 5T75 5T100 5V10H0Z' fill='rgba(117,198,218,0.55)'/%3E%3C/svg%3E") 0 0 / 50% 100% repeat-x;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M0 5Q12.5 0 25 5T50 5T75 5T100 5V10H0Z' fill='rgba(117,198,218,0.55)'/%3E%3C/svg%3E")
+    0 0 / 50% 100% repeat-x;
   animation: wave-slide 3.2s linear infinite paused;
 }
 @keyframes wave-slide {
-  to { background-position-x: 100%; } /* сдвиг ровно на одну волну */
+  to {
+    background-position-x: 100%;
+  } /* сдвиг ровно на одну волну */
 }
 .DrumButton.is-playing .DrumGlass-water::before {
   animation-play-state: running;
@@ -210,7 +205,12 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff 0 12%, rgba(255, 255, 255, 0.35) 40%, rgba(255, 255, 255, 0.55) 100%);
+  background: radial-gradient(
+    circle at 30% 30%,
+    #fff 0 12%,
+    rgba(255, 255, 255, 0.35) 40%,
+    rgba(255, 255, 255, 0.55) 100%
+  );
   box-shadow: inset 0 0 0 0.25cqw rgba(255, 255, 255, 0.7);
   animation: foam-rise var(--d) ease-in infinite paused;
   animation-delay: var(--delay);
@@ -219,22 +219,40 @@
   animation-play-state: running;
 }
 @keyframes foam-rise {
-  0% { transform: translate(0, 0) scale(0.4); opacity: 0; }
-  15% { opacity: 1; }
-  100% { transform: translate(var(--dx), calc(var(--rise) * -1)) scale(1); opacity: 0; }
+  0% {
+    transform: translate(0, 0) scale(0.4);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), calc(var(--rise) * -1)) scale(1);
+    opacity: 0;
+  }
 }
 
 .DrumGlass-shine {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.32), transparent 38%),
+    radial-gradient(
+      circle at 28% 22%,
+      rgba(255, 255, 255, 0.32),
+      transparent 38%
+    ),
     rgba(20, 24, 28, 0.45); /* на паузе стекло затемнено, чтобы читалась иконка ▶ */
-  transition: background-color 0.4s, opacity 0.4s;
+  transition:
+    background-color 0.4s,
+    opacity 0.4s;
 }
 .DrumButton.is-playing .DrumGlass-shine {
   background:
-    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.32), transparent 38%),
+    radial-gradient(
+      circle at 28% 22%,
+      rgba(255, 255, 255, 0.32),
+      transparent 38%
+    ),
     transparent;
 }
 

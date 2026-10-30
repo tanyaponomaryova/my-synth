@@ -1,87 +1,108 @@
 /* ============ Slider: горизонтальный ползунок (BPM, VOLUME, UI) ============ */
 /* Ползунок -- носок (SVG в data-URI). Размеры в cqw: 1cqw = 1% ширины .TowelRail. */
 .Slider {
-  --slider-track: #ff0000;
-  --slider-thumb-size: 13cqw; /* высота носка */
+  --slider-height: 3cqw;
+  --slider-thumb-size: 13cqw;
   --slider-thumb-width: 10.4cqw;
   --slider-track-height: 0.7cqw;
 
-  --slider-thumb-width: 10.4cqw;
+  position: relative;
+  height: var(--slider-height);
+
+  /* Положение SVG относительно центра дорожки */
+  --thumb-offset-y: 0cqw;
 }
 
 #bpmSlider {
   --sock: url('../img/sock-bpm.svg');
-  /* --slider-thumb-width: 10.4cqw; */
-}
-/* ползунки-носки из папки img (пропорции: 207x260 и 305x234) */
-#masterVolume {
-  --sock: url('../img/sock-volume.svg');
-  /* --slider-thumb-width: 10.4cqw; */
-}
-#uiVolume {
-  --sock: url('../img/sock-ui-volume.svg');
-  /* --slider-thumb-width: 16.9cqw; */
+  --slider-thumb-size: 40cqw;
+  --slider-thumb-width: 30cqw;
+
+  --thumb-offset-y: 0cqw;
 }
 
+#masterVolume {
+  --sock: url('../img/sock-volume.svg');
+  --slider-thumb-size: 40cqw;
+  --slider-thumb-width: 30cqw;
+
+  --thumb-offset-y: 0cqw;
+}
+
+#uiVolume {
+  --sock: url('../img/sock-ui-volume.svg');
+  --slider-thumb-size: 40cqw;
+  --slider-thumb-width: 40cqw;
+
+  --thumb-offset-y: 0cqw;
+}
+
+/* Сам input */
 .Slider input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
+
   display: block;
   width: 100%;
-  height: var(--slider-thumb-size);
+  height: var(--slider-height);
+
   margin: 0;
+  padding: 0;
+
   background: transparent;
   cursor: pointer;
   touch-action: pan-y;
 }
 
-/* --- WebKit / Blink --- */
+/* WebKit / Chrome / Safari */
 .Slider input[type='range']::-webkit-slider-runnable-track {
   height: var(--slider-track-height);
   border-radius: 1cqw;
   background: var(--slider-track);
 }
+
 .Slider input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
+  appearance: none;
+
   width: var(--slider-thumb-width);
   height: var(--slider-thumb-size);
+
   margin-top: calc((var(--slider-track-height) - var(--slider-thumb-size)) / 2);
+
   border: 0;
   border-radius: 0;
+
   background: var(--sock) center / contain no-repeat;
-  /* filter: drop-shadow(0 0.5cqw 0.5cqw rgba(0, 0, 0, 0.22)); */
+
+  transform: translateY(var(--thumb-offset-y));
   transition: transform 0.15s;
 }
+
 .Slider input[type='range']:active::-webkit-slider-thumb {
-  transform: rotate(-10deg) scale(1.07);
+  transform: translateY(var(--thumb-offset-y)) rotate(-10deg) scale(1.07);
 }
 
-/* --- Firefox --- */
+/* Firefox */
 .Slider input[type='range']::-moz-range-track {
   height: var(--slider-track-height);
   border-radius: 1cqw;
   background: var(--slider-track);
 }
+
 .Slider input[type='range']::-moz-range-thumb {
   width: var(--slider-thumb-width);
   height: var(--slider-thumb-size);
+
   border: 0;
   border-radius: 0;
+
   background: var(--sock) center / contain no-repeat;
-  filter: drop-shadow(0 0.5cqw 0.5cqw rgba(0, 0, 0, 0.22));
+
+  transform: translateY(var(--thumb-offset-y));
   transition: transform 0.15s;
 }
-.Slider input[type='range']:active::-moz-range-thumb {
-  transform: rotate(-10deg) scale(1.07);
-}
 
-/* фокус с клавиатуры: подсвечиваем носок
-.Slider input[type='range']:focus-visible {
-  outline: none;
+.Slider input[type='range']:active::-moz-range-thumb {
+  transform: translateY(var(--thumb-offset-y)) rotate(-10deg) scale(1.07);
 }
-.Slider input[type='range']:focus-visible::-webkit-slider-thumb {
-  filter: drop-shadow(0 0 0.9cqw rgba(74, 144, 255, 0.95));
-}
-.Slider input[type='range']:focus-visible::-moz-range-thumb {
-  filter: drop-shadow(0 0 0.9cqw rgba(74, 144, 255, 0.95));
-} */
