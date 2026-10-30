@@ -87,21 +87,6 @@
 
         <!-- стиральная машина: play/pause, бомбочки-громкости синтов -->
         <section class="Washer" aria-label="Управление и громкость синтов">
-          <svg class="Washer-ducks" viewBox="0 0 258 190" aria-hidden="true">
-            <symbol id="duck" viewBox="0 0 100 90">
-              <ellipse cx="45" cy="62" rx="42" ry="26" fill="#ffe066" />
-              <circle cx="62" cy="28" r="24" fill="#ffe066" />
-              <path d="M18 56 Q34 84 64 72 Q42 66 18 56 Z" fill="#ffd23f" />
-              <path d="M82 30 L100 38 L82 45 Z" fill="#ffa58a" />
-              <circle cx="69" cy="25" r="3.8" fill="#ff9d6e" />
-            </symbol>
-            <use href="#duck" x="15" y="0" width="150" height="135" />
-            <use href="#duck" x="153" y="22" width="85" height="76" />
-            <use href="#duck" x="90" y="90" width="80" height="72" />
-            <use href="#duck" x="1" y="122" width="78" height="70" />
-            <use href="#duck" x="191" y="120" width="66" height="60" />
-          </svg>
-
           <div class="Washer-lid"></div>
 
           <div class="Washer-bombs">
@@ -281,16 +266,74 @@
             <span class="DrumGlass" aria-hidden="true">
               <svg class="DrumGlass-drum" viewBox="-50 -50 100 100">
                 <circle r="50" fill="#38434c" />
-                <g fill="#6f8290"><circle cx="40.0" cy="0.0" r="2.2"/><circle cx="36.96" cy="15.31" r="2.2"/><circle cx="28.28" cy="28.28" r="2.2"/><circle cx="15.31" cy="36.96" r="2.2"/><circle cx="0.0" cy="40.0" r="2.2"/><circle cx="-15.31" cy="36.96" r="2.2"/><circle cx="-28.28" cy="28.28" r="2.2"/><circle cx="-36.96" cy="15.31" r="2.2"/><circle cx="-40.0" cy="0.0" r="2.2"/><circle cx="-36.96" cy="-15.31" r="2.2"/><circle cx="-28.28" cy="-28.28" r="2.2"/><circle cx="-15.31" cy="-36.96" r="2.2"/><circle cx="-0.0" cy="-40.0" r="2.2"/><circle cx="15.31" cy="-36.96" r="2.2"/><circle cx="28.28" cy="-28.28" r="2.2"/><circle cx="36.96" cy="-15.31" r="2.2"/><circle cx="28.03" cy="7.46" r="1.8"/><circle cx="20.54" cy="20.47" r="1.8"/><circle cx="7.56" cy="28.0" r="1.8"/><circle cx="-7.46" cy="28.03" r="1.8"/><circle cx="-20.47" cy="20.54" r="1.8"/><circle cx="-28.0" cy="7.56" r="1.8"/><circle cx="-28.03" cy="-7.46" r="1.8"/><circle cx="-20.54" cy="-20.47" r="1.8"/><circle cx="-7.56" cy="-28.0" r="1.8"/><circle cx="7.46" cy="-28.03" r="1.8"/><circle cx="20.47" cy="-20.54" r="1.8"/><circle cx="28.0" cy="-7.56" r="1.8"/></g>
+                <g fill="#6f8290">
+                  <circle cx="40.0" cy="0.0" r="2.2" />
+                  <circle cx="36.96" cy="15.31" r="2.2" />
+                  <circle cx="28.28" cy="28.28" r="2.2" />
+                  <circle cx="15.31" cy="36.96" r="2.2" />
+                  <circle cx="0.0" cy="40.0" r="2.2" />
+                  <circle cx="-15.31" cy="36.96" r="2.2" />
+                  <circle cx="-28.28" cy="28.28" r="2.2" />
+                  <circle cx="-36.96" cy="15.31" r="2.2" />
+                  <circle cx="-40.0" cy="0.0" r="2.2" />
+                  <circle cx="-36.96" cy="-15.31" r="2.2" />
+                  <circle cx="-28.28" cy="-28.28" r="2.2" />
+                  <circle cx="-15.31" cy="-36.96" r="2.2" />
+                  <circle cx="-0.0" cy="-40.0" r="2.2" />
+                  <circle cx="15.31" cy="-36.96" r="2.2" />
+                  <circle cx="28.28" cy="-28.28" r="2.2" />
+                  <circle cx="36.96" cy="-15.31" r="2.2" />
+                  <circle cx="28.03" cy="7.46" r="1.8" />
+                  <circle cx="20.54" cy="20.47" r="1.8" />
+                  <circle cx="7.56" cy="28.0" r="1.8" />
+                  <circle cx="-7.46" cy="28.03" r="1.8" />
+                  <circle cx="-20.47" cy="20.54" r="1.8" />
+                  <circle cx="-28.0" cy="7.56" r="1.8" />
+                  <circle cx="-28.03" cy="-7.46" r="1.8" />
+                  <circle cx="-20.54" cy="-20.47" r="1.8" />
+                  <circle cx="-7.56" cy="-28.0" r="1.8" />
+                  <circle cx="7.46" cy="-28.03" r="1.8" />
+                  <circle cx="20.47" cy="-20.54" r="1.8" />
+                  <circle cx="28.0" cy="-7.56" r="1.8" />
+                </g>
                 <g fill="#ffffff" fill-opacity="0.22">
                   <rect x="-2" y="-46" width="4" height="16" rx="2" />
-                  <rect x="-2" y="-46" width="4" height="16" rx="2" transform="rotate(120)" />
-                  <rect x="-2" y="-46" width="4" height="16" rx="2" transform="rotate(240)" />
+                  <rect
+                    x="-2"
+                    y="-46"
+                    width="4"
+                    height="16"
+                    rx="2"
+                    transform="rotate(120)"
+                  />
+                  <rect
+                    x="-2"
+                    y="-46"
+                    width="4"
+                    height="16"
+                    rx="2"
+                    transform="rotate(240)"
+                  />
                 </g>
                 <!-- бельё: носок, футболка, полотенце и уточка -->
-                <path d="M-6 -24 H8 V-6 C8 -2 14 0 14 6 C14 12 6 13 0 11 C-8 9 -6 3 -6 -2Z" fill="#fb9fe0" />
-                <path d="M16 12 L28 6 L33 14 L27 17 L27 30 H15 V17 L9 14 L14 6Z" fill="#b6d0ff" transform="rotate(30 20 18)" />
-                <rect x="-30" y="2" width="22" height="14" rx="4" fill="#bdff5a" transform="rotate(-25 -19 9)" />
+                <path
+                  d="M-6 -24 H8 V-6 C8 -2 14 0 14 6 C14 12 6 13 0 11 C-8 9 -6 3 -6 -2Z"
+                  fill="#fb9fe0"
+                />
+                <path
+                  d="M16 12 L28 6 L33 14 L27 17 L27 30 H15 V17 L9 14 L14 6Z"
+                  fill="#b6d0ff"
+                  transform="rotate(30 20 18)"
+                />
+                <rect
+                  x="-30"
+                  y="2"
+                  width="22"
+                  height="14"
+                  rx="4"
+                  fill="#bdff5a"
+                  transform="rotate(-25 -19 9)"
+                />
                 <ellipse cx="-14" cy="-20" rx="9" ry="6" fill="#ffe066" />
                 <circle cx="-8" cy="-26" r="5" fill="#ffe066" />
               </svg>
@@ -578,19 +621,19 @@
           <div class="Drums-body">
             <div class="Sequencer">
               <div class="SequencerRow" data-track="kick">
-                <div class="ToggleButton active"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
-                <div class="ToggleButton active"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
-                <div class="ToggleButton"></div>
-                <div class="ToggleButton active"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
@@ -598,7 +641,6 @@
               <div class="SequencerRow" data-track="snare">
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
-                <div class="ToggleButton active"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
@@ -606,7 +648,8 @@
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
-                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
@@ -615,8 +658,6 @@
               </div>
               <div class="SequencerRow" data-track="hihat">
                 <div class="ToggleButton"></div>
-                <div class="ToggleButton active"></div>
-                <div class="ToggleButton active"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
@@ -626,19 +667,14 @@
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
-                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
               </div>
               <div class="SequencerRow" data-track="clap">
-                <div class="ToggleButton"></div>
-                <div class="ToggleButton"></div>
-                <div class="ToggleButton"></div>
-                <div class="ToggleButton"></div>
-                <div class="ToggleButton"></div>
-                <div class="ToggleButton"></div>
-                <div class="ToggleButton"></div>
                 <div class="ToggleButton active"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
@@ -647,7 +683,14 @@
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
                 <div class="ToggleButton"></div>
-                <div class="ToggleButton active"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
+                <div class="ToggleButton"></div>
               </div>
             </div>
             <div class="Mixer">

@@ -162,7 +162,10 @@ const drums = {
     },
     hihat: {
       sampler: {
-        urls: { C2: 'wood-click_144bpm.wav' },
+        urls: {
+          // C2: 'wood-click_144bpm.wav'
+          C2: 'lo-fi-snare.wav',
+        },
         baseUrl: 'samples/',
         node: null,
       },
@@ -179,7 +182,10 @@ const drums = {
     },
     clap: {
       sampler: {
-        urls: { C2: 'percussion-ding.wav' },
+        urls: {
+          // C2: 'percussion-ding.wav'
+          C2: 'kick-lo-fi-muted_C_major.wav',
+        },
         baseUrl: 'samples/',
         node: null,
       },

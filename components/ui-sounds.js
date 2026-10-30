@@ -16,13 +16,45 @@
   // detune    -- случайный разброс высоты в центах (только одноразовые), чтобы не надоедало
   // fade      -- плавное появление/исчезание в секундах (шум стиралки)
   const UI_SOUNDS = {
-    sock:    { files: ['sock-rustle.wav'], volume: -14, loop: true, move: true, sensitivity: 1.5 }, // носки на трубе
-    fill:    { files: ['water-fill.wav'], volume: -14, loop: true, move: true, sensitivity: 1.5, rate: [0.85, 1.35] }, // флаконы
-    knob:    { files: ['knob-creak.wav'], volume: -18, loop: true, move: true, sensitivity: 1 }, // ручки
-    washer:  { files: ['washer-loop.wav'], volume: -22, loop: true, fade: 1 }, // шум работающей машины
-    curtain: { files: ['curtain-1.wav', 'curtain-2.wav'], volume: -12, detune: 100 }, // выбор осциллятора
-    pause:   { files: ['pause-knock.wav'], volume: -14, detune: 100 }, // клик по барабану / Stop
-    tile:    { files: ['tile-knock-1.wav', 'tile-knock-2.wav', 'tile-knock-3.wav'], volume: -10, detune: 150 }, // клики по секвенсору
+    sock: {
+      files: ['sock-rustle.wav'],
+      volume: -14,
+      loop: true,
+      move: true,
+      sensitivity: 1.5,
+    }, // носки на трубе
+    fill: {
+      files: ['water-fill.wav'],
+      volume: -14,
+      loop: true,
+      move: true,
+      sensitivity: 1.5,
+      rate: [0.85, 1.35],
+    }, // флаконы
+    knob: {
+      files: ['knob-creak.wav'],
+      volume: -18,
+      loop: true,
+      move: true,
+      sensitivity: 1,
+    }, // ручки
+    washer: {
+      files: ['freesound_community-washing-machine-soft-60397.mp3'],
+      volume: -22,
+      loop: true,
+      fade: 1,
+    }, // шум работающей машины
+    curtain: {
+      files: ['curtain-1.wav', 'curtain-2.wav'],
+      volume: -12,
+      detune: 100,
+    }, // выбор осциллятора
+    pause: { files: ['pause-knock.wav'], volume: -14, detune: 100 }, // клик по барабану / Stop
+    tile: {
+      files: ['tile-knock-1.wav', 'tile-knock-2.wav', 'tile-knock-3.wav'],
+      volume: -10,
+      detune: 150,
+    }, // клики по секвенсору
   };
 
   const rand = (a, b) => a + Math.random() * (b - a);
@@ -46,7 +78,11 @@
     sounds[name] = { cfg, gain, players, active: false, timer: 0 };
   });
   setTimeout(() => {
-    if (missing.length) console.info('[ui-sounds] нет файлов в ' + FOLDER + ':', missing.join(', '));
+    if (missing.length)
+      console.info(
+        '[ui-sounds] нет файлов в ' + FOLDER + ':',
+        missing.join(', ')
+      );
   }, 3000);
 
   const ready = (s) => s.players.filter((p) => p.loaded);
@@ -71,7 +107,8 @@
       s.active = true;
       p.start(Tone.now(), Math.random() * p.buffer.duration);
     }
-    if (s.cfg.rate) p.playbackRate = s.cfg.rate[0] + f * (s.cfg.rate[1] - s.cfg.rate[0]);
+    if (s.cfg.rate)
+      p.playbackRate = s.cfg.rate[0] + f * (s.cfg.rate[1] - s.cfg.rate[0]);
     s.gain.gain.rampTo(level, 0.05);
     clearTimeout(s.timer);
     s.timer = setTimeout(() => {
@@ -84,7 +121,8 @@
   }
 
   const fraction = (input) =>
-    (Number(input.value) - Number(input.min || 0)) / (Number(input.max || 100) - Number(input.min || 0));
+    (Number(input.value) - Number(input.min || 0)) /
+    (Number(input.max || 100) - Number(input.min || 0));
 
   // скорость изменения значения (доля диапазона в секунду) -> громкость голоса
   function watchMove(input, name) {
@@ -101,11 +139,19 @@
     });
   }
 
-  document.querySelectorAll('.Slider input[type="range"]').forEach((i) => watchMove(i, 'sock'));
-  document.querySelectorAll('.Bottle input[type="range"]').forEach((i) => watchMove(i, 'fill'));
-  document.querySelectorAll('.Knob input[type="range"]').forEach((i) => watchMove(i, 'knob'));
+  document
+    .querySelectorAll('.Slider input[type="range"]')
+    .forEach((i) => watchMove(i, 'sock'));
+  document
+    .querySelectorAll('.Bottle input[type="range"]')
+    .forEach((i) => watchMove(i, 'fill'));
+  document
+    .querySelectorAll('.Knob input[type="range"]')
+    .forEach((i) => watchMove(i, 'knob'));
 
-  document.querySelectorAll('.OscButton').forEach((b) => b.addEventListener('click', () => hit('curtain')));
+  document
+    .querySelectorAll('.OscButton')
+    .forEach((b) => b.addEventListener('click', () => hit('curtain')));
   ['startButton', 'stopButton'].forEach((id) =>
     document.getElementById(id).addEventListener('click', () => hit('pause'))
   );
@@ -134,5 +180,7 @@
   applyUi();
 
   // AudioContext можно запустить только жестом пользователя: любое нажатие запускает его
-  ['pointerdown', 'keydown'].forEach((ev) => document.addEventListener(ev, () => Tone.start(), { capture: true }));
+  ['pointerdown', 'keydown'].forEach((ev) =>
+    document.addEventListener(ev, () => Tone.start(), { capture: true })
+  );
 })();
