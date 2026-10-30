@@ -35,20 +35,16 @@
       <div class="Col Col--left">
         <!-- полотенцесушитель: громкость и BPM -->
         <section class="TowelRail" aria-label="Общие настройки">
-          <svg class="TowelRail-pipe" viewBox="0 0 460 360" aria-hidden="true">
-            <path
-              d="M430 28 H70 A38.5 38.5 0 0 0 70 105 H390 A38.5 38.5 0 0 1 390 181 H70 A38.5 38.5 0 0 0 70 258 H390 A38.5 38.5 0 0 1 390 335 H50"
-              fill="none"
-              stroke="#e0e0e0"
-              stroke-width="52"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img
+            class="TowelRail-pipe"
+            src="img/towel-rail.svg"
+            alt=""
+            aria-hidden="true"
+          />
 
           <!-- BPM -->
-          <div class="Slider" id="bpmSlider" style="--y: 335">
-            <div class="title">BPM</div>
+          <div class="Slider" id="bpmSlider" style="--y: 485.8">
+            <!-- <div class="title">BPM</div> -->
             <input
               type="range"
               min="40"
@@ -58,9 +54,10 @@
               aria-label="BPM"
             />
           </div>
+
           <!-- ОБЩАЯ ГРОМКОСТЬ -->
-          <div class="Slider" id="masterVolume" style="--y: 181">
-            <div class="title">Volume</div>
+          <div class="Slider" id="masterVolume" style="--y: 268.6">
+            <!-- <div class="title">Volume</div> -->
             <input
               type="range"
               min="-40"
@@ -72,8 +69,8 @@
           </div>
 
           <!-- ГРОМКОСТЬ ЗВУКОВ ИНТЕРФЕЙСА (шорохи, стуки, шум стиралки); минимум = выключено -->
-          <div class="Slider" id="uiVolume" style="--y: 258">
-            <div class="title">UI</div>
+          <div class="Slider" id="uiVolume" style="--y: 377.2">
+            <!-- <div class="title">UI</div> -->
             <input
               type="range"
               min="-60"
@@ -315,27 +312,6 @@
                     transform="rotate(240)"
                   />
                 </g>
-                <!-- бельё: носок, футболка, полотенце и уточка -->
-                <path
-                  d="M-6 -24 H8 V-6 C8 -2 14 0 14 6 C14 12 6 13 0 11 C-8 9 -6 3 -6 -2Z"
-                  fill="#fb9fe0"
-                />
-                <path
-                  d="M16 12 L28 6 L33 14 L27 17 L27 30 H15 V17 L9 14 L14 6Z"
-                  fill="#b6d0ff"
-                  transform="rotate(30 20 18)"
-                />
-                <rect
-                  x="-30"
-                  y="2"
-                  width="22"
-                  height="14"
-                  rx="4"
-                  fill="#bdff5a"
-                  transform="rotate(-25 -19 9)"
-                />
-                <ellipse cx="-14" cy="-20" rx="9" ry="6" fill="#ffe066" />
-                <circle cx="-8" cy="-26" r="5" fill="#ffe066" />
               </svg>
               <span class="DrumGlass-water"></span>
               <span class="DrumGlass-foam"></span>
@@ -343,13 +319,13 @@
             </span>
             <span class="DrumButton-icon"></span>
           </button>
-          <span class="Washer-play" aria-hidden="true"></span>
+          <!-- <span class="Washer-play" aria-hidden="true"></span>
           <button
             class="StopButton"
             id="stopButton"
             type="button"
             aria-label="Stop"
-          ></button>
+          ></button> -->
         </section>
       </div>
 
@@ -358,7 +334,7 @@
         <section class="Bath" aria-label="Ванна">
           <!-- полка FX -->
           <div class="FxShelf">
-            <div class="Label FxShelf-title">FX</div>
+            <img class="FxShelf-title" src="img/fx-text.svg" alt="FX" />
             <div class="FxShelf-bottles">
               <div class="FxGroup FxGroup--blue">
                 <div class="Bottle Bottle--reverb" style="--value: 0">
@@ -532,84 +508,11 @@
           </div>
 
           <!-- ванна -->
-          <svg class="Tub" viewBox="0 0 905 565" aria-hidden="true">
-            <path
-              d="M0 30 Q0 0 30 0 H875 Q905 0 905 30 V300 C905 380 880 430 850 500 Q835 565 780 565 H125 Q70 565 55 500 C25 430 0 380 0 300 Z"
-              fill="#f1f1f1"
-            />
-          </svg>
+          <img class="Tub" src="img/bath.svg" alt="" aria-hidden="true" />
           <div class="Water"></div>
 
           <!-- человек (координаты: макет минус (710, 235)) -->
-          <svg class="Person" viewBox="0 0 905 890" aria-hidden="true">
-            <defs>
-              <linearGradient id="skinShade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0.45" stop-color="#ffcfcf" />
-                <stop offset="1" stop-color="#ffaaa8" />
-              </linearGradient>
-            </defs>
-            <!-- ноги -->
-            <path
-              d="M620 470 L742 362 L782 262"
-              fill="none"
-              stroke="#ffc6c6"
-              stroke-width="62"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <ellipse cx="783" cy="250" rx="26" ry="30" fill="#ffc6c6" />
-            <g fill="#ffc6c6">
-              <circle cx="770" cy="228" r="9" />
-              <circle cx="786" cy="222" r="9" />
-              <circle cx="800" cy="230" r="8" />
-            </g>
-            <path
-              d="M640 505 C740 525 820 490 868 410"
-              fill="none"
-              stroke="#ffbdbd"
-              stroke-width="60"
-              stroke-linecap="round"
-            />
-            <ellipse
-              cx="882"
-              cy="385"
-              rx="36"
-              ry="58"
-              transform="rotate(-12 882 385)"
-              fill="#ffbdbd"
-            />
-            <g fill="#ffbdbd">
-              <circle cx="866" cy="326" r="10" />
-              <circle cx="886" cy="322" r="10" />
-              <circle cx="904" cy="332" r="9" />
-            </g>
-            <!-- туловище -->
-            <path
-              d="M70 330 L190 360 L215 520 L150 565 L60 545 Q95 450 70 330 Z"
-              fill="url(#skinShade)"
-            />
-            <!-- рука -->
-            <path
-              d="M190 372 C300 345 430 335 540 348"
-              fill="none"
-              stroke="#ffcfcf"
-              stroke-width="48"
-              stroke-linecap="round"
-            />
-            <ellipse cx="545" cy="346" rx="32" ry="17" fill="#ffc6c6" />
-            <!-- голова -->
-            <ellipse cx="90" cy="275" rx="72" ry="68" fill="#ffcfcf" />
-            <circle cx="158" cy="262" r="13" fill="#ffcfcf" />
-            <ellipse cx="62" cy="318" rx="24" ry="14" fill="#ffb4b4" />
-            <path
-              d="M104 254 L114 270 L126 257"
-              fill="none"
-              stroke="#3a3a3a"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img class="Person" src="img/guy.svg" alt="" aria-hidden="true" />
 
           <!-- зона пузырей: сюда p5 (bubbleBath.js) рисует canvas -->
           <div id="bubble-zone"></div>
@@ -617,7 +520,11 @@
 
         <!-- драм-сэмплер -->
         <section class="Drums" aria-label="Drum sampler">
-          <div class="Label Drums-title">Drum sampler</div>
+          <img
+            class="Drums-title"
+            src="img/drum-sampler-text.svg"
+            alt="Drum sampler"
+          />
           <div class="Drums-body">
             <div class="Sequencer">
               <div class="SequencerRow" data-track="kick">
@@ -758,38 +665,13 @@
       <!-- ===== ПРАВАЯ КОЛОНКА ===== -->
       <div class="Col Col--right">
         <section class="Curtain" aria-label="Выбор осцилляторов">
-          <div class="Curtain-paper"></div>
-          <svg class="Curtain-hem" viewBox="0 0 453 72" aria-hidden="true">
-            <path
-              d="M0 0 H453 V22 Q410 8 360 22 Q345 30 340 50 Q335 72 275 72 Q215 72 210 50 Q205 30 190 22 Q150 8 95 22 Q50 34 30 30 Q10 28 0 20 Z"
-              fill="#ebebeb"
-            />
-          </svg>
-          <div class="Curtain-rings" aria-hidden="true">
-            <span class="Ring"></span>
-            <span class="Ring"></span>
-            <span class="Ring"></span>
-            <span class="Ring"></span>
-            <span class="Ring"></span>
-            <span class="Ring"></span>
-            <span class="Ring"></span>
-            <span class="Ring"></span>
-          </div>
-
-          <h1 class="Curtain-title">bath<br />synth</h1>
-          <svg
-            class="Curtain-underline"
-            viewBox="0 0 400 40"
+          <img
+            class="Curtain-art"
+            src="img/curtain.svg"
+            alt=""
             aria-hidden="true"
-          >
-            <path
-              d="M6 32 C90 22 250 14 394 8"
-              fill="none"
-              stroke="#4a4a4a"
-              stroke-width="12"
-              stroke-linecap="round"
-            />
-          </svg>
+          />
+          <h1 class="visually-hidden">bath synth</h1>
 
           <div class="Label Curtain-label">Osci</div>
           <div class="OscGrid">

@@ -5,7 +5,7 @@
 .Bath {
   position: relative;
   width: 100%;
-  aspect-ratio: 905 / 890;
+  aspect-ratio: 100 / 86.5; /* полка + ванна из bath.svg (1275 x 645) */
   container-type: inline-size;
 }
 
@@ -24,8 +24,10 @@
   position: absolute;
   left: 3cqw;
   top: 2.5cqw;
-  font-size: 2.9cqw;
-  color: #7f7f7f;
+  height: 3.4cqw; /* fx-text.svg */
+  width: auto;
+  display: block;
+  user-select: none;
 }
 
 .FxShelf-bottles {
@@ -38,13 +40,14 @@
   align-items: flex-end;
 }
 
-/* ---------- ванна ---------- */
+/* ---------- ванна (bath.svg, 1275 x 645) ---------- */
 .Tub {
   position: absolute;
   left: 0;
   top: 35.9cqw;
   width: 100%;
   height: auto;
+  display: block;
 }
 
 .Water {
@@ -146,9 +149,12 @@
 
 .Person {
   position: absolute;
+  /* guy.svg (1283 x 524) лежит в тех же координатах, что и ванна:
+     сдвиг -100 ед. вверх от верха ванны, нижний край фигуры = низ воды */
   left: 0;
-  top: 0;
-  width: 100%;
+  top: 28.06cqw;
+  width: 100.63cqw;
+  max-width: none;
   height: auto;
   pointer-events: none;
 }
@@ -166,6 +172,3 @@
   cursor: pointer;
 }
 
-.Person {
-  overflow: visible;
-}

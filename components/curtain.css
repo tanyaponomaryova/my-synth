@@ -1,92 +1,20 @@
 /* ============ Curtain: шторка-блокнот с логотипом и выбором осциллятора ============ */
-/* Система координат: 453 x 1160. 1cqw = 4.53px макета. */
+/* Весь фон шторки (кольца, лист, надпись, подол) -- curtain.svg, 550 x 1430. */
 .Curtain {
   position: relative;
   width: 100%;
-  aspect-ratio: 453 / 1160;
+  aspect-ratio: 550 / 1430;
   container-type: inline-size;
 }
 
-/* лист */
-.Curtain-paper {
+/* картинка шторки */
+.Curtain-art {
   position: absolute;
   left: 0;
-  right: 0;
-  top: 4.9cqw;
-  height: 242.4cqw;
-  border-radius: 2.2cqw 2.2cqw 0 0;
-  background: #ebebeb;
-}
-
-/* волнистый низ шторки */
-.Curtain-hem {
-  position: absolute;
-  left: 0;
-  top: 240.6cqw;
+  top: 0;
   width: 100%;
   height: auto;
   display: block;
-}
-
-/* кольца */
-.Curtain-rings {
-  position: absolute;
-  top: 0;
-  left: 2.5cqw;
-  right: 2.5cqw;
-  display: flex;
-  justify-content: space-between;
-  z-index: 2;
-  pointer-events: none;
-}
-.Ring {
-  position: relative;
-  width: 7cqw;
-  height: 15cqw;
-}
-.Ring::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 12cqw;
-  border: 1.8cqw solid var(--grey-500);
-  border-bottom: 0;
-  border-radius: 3.5cqw 3.5cqw 0 0;
-}
-.Ring::after {
-  content: '';
-  position: absolute;
-  left: 0.5cqw;
-  bottom: 0;
-  width: 6cqw;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #fff;
-}
-
-/* название */
-.Curtain-title {
-  position: absolute;
-  left: 1.5cqw;
-  top: 21cqw;
-  margin: 0;
-  z-index: 1;
-  font-family: var(--font-hand);
-  font-weight: 400;
-  font-size: var(--title-size, 30cqw);
-  line-height: 0.82;
-  color: var(--ink-soft);
-  transform: rotate(-4deg);
-  transform-origin: left center;
-  white-space: nowrap;
-}
-.Curtain-underline {
-  position: absolute;
-  left: 1.5cqw;
-  top: 80cqw;
-  width: 88cqw;
-  height: auto;
-  z-index: 1;
 }
 
 .Curtain-label {
@@ -104,7 +32,7 @@
   left: 4.4cqw;
   right: 8.4cqw;
   top: 103.5cqw;
-  height: 143cqw;
+  height: 137cqw;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   z-index: 1;

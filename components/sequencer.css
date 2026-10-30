@@ -5,9 +5,11 @@
 }
 
 .Drums-title {
+  display: block;
   margin: 0 0 0.8cqw 0.2cqw;
-  font-size: 2.7cqw;
-  color: #d3d3d3;
+  height: 2.8cqw; /* drum-sampler-text.svg */
+  width: auto;
+  user-select: none;
 }
 
 .Drums-body {
