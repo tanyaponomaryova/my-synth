@@ -41,8 +41,13 @@
   display: flex;
   justify-content: space-between;
 }
-.Washer-bombs .Knob {
+/* колонка: ручка громкости + три радио-кнопки выбора мелодии под ней */
+.Bomb {
   width: 17.6cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.4cqw;
 }
 
 /* --- Большая кнопка-барабан: #startButton (play / pause) --- */

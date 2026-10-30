@@ -25,12 +25,52 @@ function bindSlider(idOrElement, initialValue, onChange) {
   slider.addEventListener('input', (e) => onChange(Number(e.target.value)));
 }
 
-// Создаёт Part с зацикливанием по нотам из synth.sequence
+// Создаёт по одному зацикленному Part на каждую мелодию из synth.sequences.
+// Звучит только активная мелодия. Выбор (synth.pendingMelody) применяется
+// не сразу, а когда начинается следующий цикл: первое же событие нового цикла
+// (у любой из мелодий) замечает, что номер цикла сменился, и делает pending активной.
 function startPart(synth, callback) {
-  const part = new Tone.Part(callback, synth.sequence).start(0);
-  part.loopEnd = synth.loop;
-  part.loop = true;
-  return part;
+  const transport = Tone.getTransport();
+  const loopTicks = Tone.Time(synth.loop).toTicks();
+  const state = (synth.melody = { active: 0, loopIndex: -1 });
+
+  const adopt = (drawTime) => {
+    let next = synth.pendingMelody ?? 0;
+    if (next < 0 || next >= synth.sequences.length) next = 0;
+    if (next === state.active) return;
+    state.active = next;
+    // сообщаем интерфейсу (убрать «ожидание» у радио-кнопки) в момент, когда это слышно
+    const notify = () =>
+      document.dispatchEvent(
+        new CustomEvent('melodychange', {
+          detail: { synth: synth.id, index: next },
+        })
+      );
+    if (drawTime === undefined) notify();
+    else Tone.getDraw().schedule(notify, drawTime);
+  };
+
+  // после Stop цикл начнётся заново: применяем выбор сразу
+  transport.on('stop', () => {
+    state.loopIndex = -1;
+    adopt();
+  });
+
+  return synth.sequences.map((notes, index) => {
+    const part = new Tone.Part((time, note) => {
+      const loopIndex = Math.floor(
+        Math.round(transport.getTicksAtTime(time)) / loopTicks
+      );
+      if (loopIndex !== state.loopIndex) {
+        state.loopIndex = loopIndex;
+        adopt(time);
+      }
+      if (index === state.active) callback(time, note);
+    }, notes).start(0);
+    part.loopEnd = synth.loop;
+    part.loop = true;
+    return part;
+  });
 }
 // #endregion
 
@@ -411,67 +451,100 @@ const synth1 = {
     volume: -100,
     node: null,
   },
-  sequence: [
-    {
-      time: '0:0:2',
-      noteName: 'G5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '0:1:0',
-      noteName: 'A5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '0:2:0',
-      noteName: 'A5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '0:2:2',
-      noteName: 'A5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '0:3:2',
-      noteName: 'B5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '1:0:0',
-      noteName: 'G5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '1:1:0',
-      noteName: 'A5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '1:2:0',
-      noteName: 'A5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '1:3:0',
-      noteName: 'G5',
-      duration: '8n',
-      velocity: 1,
-    },
-    {
-      time: '1:3:2',
-      noteName: 'B5',
-      duration: '8n',
-      velocity: 1,
-    },
+  // Три мелодии одного синта. Выбираются радио-кнопками под ручкой громкости;
+  // новая мелодия включается только когда закончится текущий loop.
+  // Длина loop (ниже) общая для всех трёх мелодий.
+  sequences: [
+    // мелодия 1 (исходная)
+    [
+      {
+        time: '0:0:2',
+        noteName: 'G5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '0:1:0',
+        noteName: 'A5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '0:2:0',
+        noteName: 'A5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '0:2:2',
+        noteName: 'A5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '0:3:2',
+        noteName: 'B5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '1:0:0',
+        noteName: 'G5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '1:1:0',
+        noteName: 'A5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '1:2:0',
+        noteName: 'A5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '1:3:0',
+        noteName: 'G5',
+        duration: '8n',
+        velocity: 1,
+      },
+      {
+        time: '1:3:2',
+        noteName: 'B5',
+        duration: '8n',
+        velocity: 1,
+      },
+    ],
+    // мелодия 2: спокойная, редкие ноты
+    [
+      { time: '0:0:0', noteName: 'B5', duration: '4n', velocity: 1 },
+      { time: '0:1:2', noteName: 'A5', duration: '8n', velocity: 1 },
+      { time: '0:2:2', noteName: 'G5', duration: '4n', velocity: 1 },
+      { time: '1:0:0', noteName: 'A5', duration: '8n', velocity: 1 },
+      { time: '1:1:0', noteName: 'B5', duration: '4n', velocity: 1 },
+      { time: '1:2:0', noteName: 'G5', duration: '8n', velocity: 1 },
+      { time: '1:3:0', noteName: 'A5', duration: '4n', velocity: 1 },
+    ],
+    // мелодия 3: оживлённая, восьмыми
+    [
+      { time: '0:0:0', noteName: 'G5', duration: '8n', velocity: 1 },
+      { time: '0:0:2', noteName: 'A5', duration: '8n', velocity: 1 },
+      { time: '0:1:0', noteName: 'B5', duration: '8n', velocity: 1 },
+      { time: '0:1:2', noteName: 'A5', duration: '8n', velocity: 1 },
+      { time: '0:2:0', noteName: 'G5', duration: '8n', velocity: 1 },
+      { time: '0:2:2', noteName: 'A5', duration: '8n', velocity: 1 },
+      { time: '0:3:0', noteName: 'B5', duration: '8n', velocity: 1 },
+      { time: '0:3:2', noteName: 'B5', duration: '8n', velocity: 1 },
+      { time: '1:0:0', noteName: 'A5', duration: '8n', velocity: 1 },
+      { time: '1:0:2', noteName: 'G5', duration: '8n', velocity: 1 },
+      { time: '1:1:0', noteName: 'A5', duration: '8n', velocity: 1 },
+      { time: '1:2:0', noteName: 'B5', duration: '8n', velocity: 1 },
+      { time: '1:2:2', noteName: 'A5', duration: '8n', velocity: 1 },
+      { time: '1:3:0', noteName: 'G5', duration: '8n', velocity: 1 },
+    ],
   ],
   loop: '2m',
 };
@@ -550,46 +623,70 @@ const synth2 = {
     volume: -100,
     node: null,
   },
-  sequence: [
-    // Такт 1
-    {
-      time: '0:0:0',
-      noteName: 'G3',
-      duration: '2n',
-      velocity: 0.35,
-    },
-    {
-      time: '0:2:0',
-      noteName: 'D4',
-      duration: '4n',
-      velocity: 0.25,
-    },
-    {
-      time: '0:3:0',
-      noteName: 'G4',
-      duration: '4n',
-      velocity: 0.3,
-    },
+  // Три мелодии одного синта. Выбираются радио-кнопками под ручкой громкости;
+  // новая мелодия включается только когда закончится текущий loop.
+  // Длина loop (ниже) общая для всех трёх мелодий.
+  sequences: [
+    // мелодия 1 (исходная)
+    [
+      // Такт 1
+      {
+        time: '0:0:0',
+        noteName: 'G3',
+        duration: '2n',
+        velocity: 0.35,
+      },
+      {
+        time: '0:2:0',
+        noteName: 'D4',
+        duration: '4n',
+        velocity: 0.25,
+      },
+      {
+        time: '0:3:0',
+        noteName: 'G4',
+        duration: '4n',
+        velocity: 0.3,
+      },
 
-    // Такт 2
-    {
-      time: '1:0:0',
-      noteName: 'E3',
-      duration: '2n',
-      velocity: 0.35,
-    },
-    {
-      time: '1:2:0',
-      noteName: 'B3',
-      duration: '4n',
-      velocity: 0.25,
-    },
-    {
-      time: '1:3:0',
-      noteName: 'E4',
-      duration: '4n',
-      velocity: 0.3,
-    },
+      // Такт 2
+      {
+        time: '1:0:0',
+        noteName: 'E3',
+        duration: '2n',
+        velocity: 0.35,
+      },
+      {
+        time: '1:2:0',
+        noteName: 'B3',
+        duration: '4n',
+        velocity: 0.25,
+      },
+      {
+        time: '1:3:0',
+        noteName: 'E4',
+        duration: '4n',
+        velocity: 0.3,
+      },
+    ],
+    // мелодия 2: C -> D
+    [
+      { time: '0:0:0', noteName: 'C3', duration: '2n', velocity: 0.35 },
+      { time: '0:2:0', noteName: 'G3', duration: '4n', velocity: 0.25 },
+      { time: '0:3:0', noteName: 'C4', duration: '4n', velocity: 0.3 },
+      { time: '1:0:0', noteName: 'D3', duration: '2n', velocity: 0.35 },
+      { time: '1:2:0', noteName: 'A3', duration: '4n', velocity: 0.25 },
+      { time: '1:3:0', noteName: 'D4', duration: '4n', velocity: 0.3 },
+    ],
+    // мелодия 3: Am -> D
+    [
+      { time: '0:0:0', noteName: 'A3', duration: '2n', velocity: 0.35 },
+      { time: '0:2:0', noteName: 'E4', duration: '4n', velocity: 0.25 },
+      { time: '0:3:0', noteName: 'A4', duration: '4n', velocity: 0.3 },
+      { time: '1:0:0', noteName: 'D3', duration: '2n', velocity: 0.35 },
+      { time: '1:2:0', noteName: 'A3', duration: '4n', velocity: 0.25 },
+      { time: '1:3:0', noteName: 'D4', duration: '4n', velocity: 0.3 },
+    ],
   ],
   loop: '2m',
 };
@@ -700,25 +797,57 @@ const synth3 = {
 
   glide: 0.08,
 
-  // Одна последовательность — без повторного объявления
-  sequence: [
-    { time: '0:0:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
-    { time: '0:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
-    { time: '0:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+  // Три мелодии одного синта. Выбираются радио-кнопками под ручкой громкости;
+  // новая мелодия включается только когда закончится текущий loop.
+  // Длина loop (ниже) общая для всех трёх мелодий.
+  sequences: [
+    // мелодия 1 (исходная)
+    [
+      { time: '0:0:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
+      { time: '0:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
+      { time: '0:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
 
-    { time: '1:0:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
-    { time: '1:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
-    { time: '1:2:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
-    { time: '1:3:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
+      { time: '1:0:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
+      { time: '1:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
+      { time: '1:2:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
+      { time: '1:3:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
 
-    { time: '2:0:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
-    { time: '2:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
-    { time: '2:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+      { time: '2:0:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
+      { time: '2:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
+      { time: '2:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
 
-    { time: '3:0:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
-    { time: '3:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
-    { time: '3:2:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
-    { time: '3:3:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+      { time: '3:0:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
+      { time: '3:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
+      { time: '3:2:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
+      { time: '3:3:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+    ],
+    // мелодия 2: плавная волна
+    [
+      { time: '0:0:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
+      { time: '0:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
+      { time: '0:2:0', noteName: 'A3', duration: '2n', velocity: 0.9 },
+      { time: '1:0:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
+      { time: '1:1:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
+      { time: '1:2:0', noteName: 'D3', duration: '2n', velocity: 0.9 },
+      { time: '2:0:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
+      { time: '2:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
+      { time: '2:2:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
+      { time: '2:3:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
+      { time: '3:0:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
+      { time: '3:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
+      { time: '3:2:0', noteName: 'C3', duration: '2n', velocity: 0.9 },
+    ],
+    // мелодия 3: медленная, длинные ноты
+    [
+      { time: '0:0:0', noteName: 'C3', duration: '2n', velocity: 0.9 },
+      { time: '0:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+      { time: '1:0:0', noteName: 'D3', duration: '2n', velocity: 0.9 },
+      { time: '1:2:0', noteName: 'A3', duration: '2n', velocity: 0.9 },
+      { time: '2:0:0', noteName: 'G3', duration: '2n', velocity: 0.9 },
+      { time: '2:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+      { time: '3:0:0', noteName: 'D3', duration: '2n', velocity: 0.9 },
+      { time: '3:2:0', noteName: 'C3', duration: '2n', velocity: 0.9 },
+    ],
   ],
 
   loop: '4m',
@@ -783,6 +912,50 @@ async function initSynth3() {
 
 // реестр: по нему data-synth="synth1" находит объект синта
 const synths = { synth1, synth2, synth3 };
+// имя синта нужно, чтобы сообщать интерфейсу о смене мелодии
+Object.entries(synths).forEach(([id, s]) => (s.id = id));
+
+// #region ВЫБОР МЕЛОДИИ (радио-кнопки под ручками громкости)
+// Ищет в HTML: <div class="MelodyPicker" data-melody-synth="synth1"> с тремя radio.
+// Работает и до первого нажатия Play: выбор запоминается и применится на старте.
+function initMelodyUI() {
+  document.querySelectorAll('.MelodyPicker').forEach((picker) => {
+    const id = picker.dataset.melodySynth;
+    const synth = synths[id];
+    if (!synth) {
+      console.warn('Неизвестный data-melody-synth:', picker);
+      return;
+    }
+    const radios = picker.querySelectorAll('input[type="radio"]');
+
+    // «в очереди»: выбрано, но ещё не звучит (ждём конца loop)
+    const refresh = () => {
+      const playing = synth.melody ? synth.melody.active : 0;
+      radios.forEach((r) =>
+        r
+          .closest('.MelodyRadio')
+          .classList.toggle(
+            'is-queued',
+            r.checked && Number(r.value) !== playing
+          )
+      );
+    };
+
+    radios.forEach((r) => {
+      if (r.checked) synth.pendingMelody = Number(r.value);
+      r.addEventListener('change', () => {
+        synth.pendingMelody = Number(r.value);
+        refresh();
+      });
+    });
+
+    document.addEventListener('melodychange', (e) => {
+      if (e.detail.synth === id) refresh();
+    });
+    refresh();
+  });
+}
+// #endregion
 
 // #region СТАРТ / PLAY / PAUSE
 let initialized = false;
@@ -814,6 +987,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const transport = Tone.getTransport();
 
   setPlayButtonText(playButton, false);
+  initMelodyUI();
 
   playButton.addEventListener('click', async () => {
     await Tone.start(); // обязательно внутри клика пользователя

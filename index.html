@@ -125,47 +125,170 @@
           <div class="Washer-lid"></div>
 
           <div class="Washer-bombs">
-            <div class="Knob Knob--blue">
-              <div class="Knob-mark"></div>
-              <input
-                class="visually-hidden"
-                type="range"
-                data-synth="synth1"
-                data-param="volume"
-                min="-100"
-                max="6"
-                step="1"
-                value="-100"
-                aria-label="Synth 1: громкость"
-              />
+            <div class="Bomb Bomb--blue">
+              <div class="Knob Knob--blue">
+                <div class="Knob-mark"></div>
+                <input
+                  class="visually-hidden"
+                  type="range"
+                  data-synth="synth1"
+                  data-param="volume"
+                  min="-100"
+                  max="6"
+                  step="1"
+                  value="-100"
+                  aria-label="Synth 1: громкость"
+                />
+              </div>
+              <!-- выбор мелодии: новая зазвучит после конца текущего loop -->
+              <div
+                class="MelodyPicker"
+                role="radiogroup"
+                aria-label="Synth 1: мелодия"
+                data-melody-synth="synth1"
+              >
+                <label class="MelodyRadio" title="Мелодия 1">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth1"
+                    value="0"
+                    checked
+                    aria-label="Synth 1: мелодия 1"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+                <label class="MelodyRadio" title="Мелодия 2">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth1"
+                    value="1"
+                    aria-label="Synth 1: мелодия 2"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+                <label class="MelodyRadio" title="Мелодия 3">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth1"
+                    value="2"
+                    aria-label="Synth 1: мелодия 3"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+              </div>
             </div>
-            <div class="Knob Knob--pink">
-              <div class="Knob-mark"></div>
-              <input
-                class="visually-hidden"
-                type="range"
-                data-synth="synth2"
-                data-param="volume"
-                min="-100"
-                max="6"
-                step="1"
-                value="-100"
-                aria-label="Synth 2: громкость"
-              />
+            <div class="Bomb Bomb--pink">
+              <div class="Knob Knob--pink">
+                <div class="Knob-mark"></div>
+                <input
+                  class="visually-hidden"
+                  type="range"
+                  data-synth="synth2"
+                  data-param="volume"
+                  min="-100"
+                  max="6"
+                  step="1"
+                  value="-100"
+                  aria-label="Synth 2: громкость"
+                />
+              </div>
+              <!-- выбор мелодии: новая зазвучит после конца текущего loop -->
+              <div
+                class="MelodyPicker"
+                role="radiogroup"
+                aria-label="Synth 2: мелодия"
+                data-melody-synth="synth2"
+              >
+                <label class="MelodyRadio" title="Мелодия 1">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth2"
+                    value="0"
+                    checked
+                    aria-label="Synth 2: мелодия 1"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+                <label class="MelodyRadio" title="Мелодия 2">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth2"
+                    value="1"
+                    aria-label="Synth 2: мелодия 2"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+                <label class="MelodyRadio" title="Мелодия 3">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth2"
+                    value="2"
+                    aria-label="Synth 2: мелодия 3"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+              </div>
             </div>
-            <div class="Knob Knob--green">
-              <div class="Knob-mark"></div>
-              <input
-                class="visually-hidden"
-                type="range"
-                data-synth="synth3"
-                data-param="volume"
-                min="-100"
-                max="6"
-                step="1"
-                value="-100"
-                aria-label="Synth 3: громкость"
-              />
+            <div class="Bomb Bomb--green">
+              <div class="Knob Knob--green">
+                <div class="Knob-mark"></div>
+                <input
+                  class="visually-hidden"
+                  type="range"
+                  data-synth="synth3"
+                  data-param="volume"
+                  min="-100"
+                  max="6"
+                  step="1"
+                  value="-100"
+                  aria-label="Synth 3: громкость"
+                />
+              </div>
+              <!-- выбор мелодии: новая зазвучит после конца текущего loop -->
+              <div
+                class="MelodyPicker"
+                role="radiogroup"
+                aria-label="Synth 3: мелодия"
+                data-melody-synth="synth3"
+              >
+                <label class="MelodyRadio" title="Мелодия 1">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth3"
+                    value="0"
+                    checked
+                    aria-label="Synth 3: мелодия 1"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+                <label class="MelodyRadio" title="Мелодия 2">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth3"
+                    value="1"
+                    aria-label="Synth 3: мелодия 2"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+                <label class="MelodyRadio" title="Мелодия 3">
+                  <input
+                    class="visually-hidden"
+                    type="radio"
+                    name="melody-synth3"
+                    value="2"
+                    aria-label="Synth 3: мелодия 3"
+                  />
+                  <span class="MelodyRadio-dot"></span>
+                </label>
+              </div>
             </div>
           </div>
 

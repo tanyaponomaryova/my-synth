@@ -1,0 +1,75 @@
+/* ============ MelodyRadio: радио-кнопки выбора мелодии синта ============ */
+/* Цвет задаёт родитель через --radio (Bomb--blue / --pink / --green),
+   он совпадает с цветом ручки громкости рядом.
+   Настоящий <input type="radio"> скрыт визуально, поэтому работают клавиатура
+   (стрелки внутри группы) и скринридеры. */
+.Bomb--blue {
+  --radio: var(--blue);
+}
+.Bomb--pink {
+  --radio: var(--pink);
+}
+.Bomb--green {
+  --radio: var(--green);
+}
+
+.MelodyPicker {
+  display: flex;
+  justify-content: center;
+  gap: 2.2cqw;
+}
+
+.MelodyRadio {
+  position: relative;
+  display: block;
+  width: 3.4cqw;
+  aspect-ratio: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* увеличенная область нажатия для пальца */
+.MelodyRadio::before {
+  content: '';
+  position: absolute;
+  inset: -1cqw;
+}
+
+.MelodyRadio-dot {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 0.55cqw solid color-mix(in srgb, var(--radio) 80%, #000);
+  background: transparent;
+  transition: background 0.12s linear;
+}
+
+/* выбранная = залита цветом ручки */
+.MelodyRadio input:checked + .MelodyRadio-dot {
+  background: var(--radio);
+}
+
+.MelodyRadio input:focus-visible + .MelodyRadio-dot {
+  outline: 3px solid rgba(74, 144, 255, 0.7);
+  outline-offset: 2px;
+}
+
+/* выбрана, но ещё не звучит: ждёт конца текущего loop -- пульсирует */
+.MelodyRadio.is-queued .MelodyRadio-dot {
+  animation: melody-queued 0.7s ease-in-out infinite alternate;
+}
+@keyframes melody-queued {
+  from {
+    background: transparent;
+  }
+  to {
+    background: var(--radio);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .MelodyRadio.is-queued .MelodyRadio-dot {
+    animation: none;
+    background: color-mix(in srgb, var(--radio) 45%, transparent);
+  }
+}
