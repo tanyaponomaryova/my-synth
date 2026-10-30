@@ -39,8 +39,8 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 0.55cqw solid color-mix(in srgb, var(--radio) 80%, #000);
-  background: transparent;
+  /* border: 0.55cqw solid color-mix(in srgb, var(--radio) 80%, #000); */
+  background: var(--grey-200);
   transition: background 0.12s linear;
 }
 
