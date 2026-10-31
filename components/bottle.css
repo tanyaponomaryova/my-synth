@@ -23,7 +23,7 @@
   bottom: 15%;
   border-radius: 4cqw;
   background: var(--grey-300);
-  z-index: -1;
+  z-index: 1;
 }
 
 .Bottle {

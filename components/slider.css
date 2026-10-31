@@ -6,11 +6,10 @@
   --slider-thumb-width: 10.4cqw;
   --slider-track-height: 0.7cqw;
 
-  position: relative;
-  height: var(--slider-height);
+  /* где на картинке носка точка подвеса, по вертикали (0..1 от высоты) */
+  --hang: 0.08;
 
-  /* Положение SVG относительно центра дорожки */
-  --thumb-offset-y: 0cqw;
+  position: relative;
 }
 
 #bpmSlider {
@@ -19,22 +18,32 @@
   --slider-thumb-width: 30cqw;
 
   --thumb-offset-y: 0cqw;
+
+  top: 3cqw;
+
+  z-index: 10;
 }
 
 #masterVolume {
   --sock: url('../img/sock-volume.svg');
-  --slider-thumb-size: 40cqw;
-  --slider-thumb-width: 30cqw;
+  --slider-thumb-size: 45cqw;
+  --slider-thumb-width: 50cqw;
 
   --thumb-offset-y: 0cqw;
+
+  top: 37cqw;
 }
 
 #uiVolume {
   --sock: url('../img/sock-ui-volume.svg');
-  --slider-thumb-size: 40cqw;
-  --slider-thumb-width: 40cqw;
+  --slider-thumb-size: 50cqw;
+  --slider-thumb-width: 50cqw;
 
   --thumb-offset-y: 0cqw;
+
+  top: 77cqw;
+
+  z-index: 10;
 }
 
 /* Сам input */
@@ -61,6 +70,7 @@
   background: var(--slider-track);
 }
 
+/* thumb: верх картинки сдвигаем так, чтобы точка подвеса была на центре трека */
 .Slider input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -68,41 +78,35 @@
   width: var(--slider-thumb-width);
   height: var(--slider-thumb-size);
 
-  margin-top: calc((var(--slider-track-height) - var(--slider-thumb-size)) / 2);
+  /* центр трека = 0; поднимаем thumb на hang * высоту */
+  margin-top: calc(
+    (var(--slider-track-height) / 2) - (var(--slider-thumb-size) * var(--hang))
+  );
 
   border: 0;
-  border-radius: 0;
-
   background: var(--sock) center / contain no-repeat;
 
-  transform: translateY(var(--thumb-offset-y));
+  transform-origin: 50% calc(var(--hang) * 100%); /* качается вокруг подвеса */
   transition: transform 0.15s;
 }
 
 .Slider input[type='range']:active::-webkit-slider-thumb {
-  transform: translateY(var(--thumb-offset-y)) rotate(-10deg) scale(1.07);
+  transform: rotate(5deg) scale(1.07);
 }
 
-/* Firefox */
-.Slider input[type='range']::-moz-range-track {
-  height: var(--slider-track-height);
-  border-radius: 1cqw;
-  background: var(--slider-track);
-}
-
+/* Firefox: margin-top у thumb не работает, поэтому сдвигаем translateY */
 .Slider input[type='range']::-moz-range-thumb {
   width: var(--slider-thumb-width);
   height: var(--slider-thumb-size);
-
   border: 0;
-  border-radius: 0;
-
   background: var(--sock) center / contain no-repeat;
 
-  transform: translateY(var(--thumb-offset-y));
+  transform: translateY(calc(var(--slider-thumb-size) * (0.5 - var(--hang))));
+  transform-origin: 50% calc(var(--hang) * 100%);
   transition: transform 0.15s;
 }
 
 .Slider input[type='range']:active::-moz-range-thumb {
-  transform: translateY(var(--thumb-offset-y)) rotate(-10deg) scale(1.07);
+  transform: translateY(calc(var(--slider-thumb-size) * (0.5 - var(--hang))))
+    rotate(-10deg) scale(1.07);
 }

@@ -21,8 +21,8 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(var(--y) / 537 * 100%);
-  height: var(--slider-thumb-size);
+  /* top: calc(var(--y) / 537 * 100%); */
+  height: var(--slider-height); /* было thumb-size: контейнер = трек */
   transform: translateY(-50%);
 }
 

@@ -358,6 +358,7 @@
   max-width: none;
   height: auto;
   pointer-events: none;
+  z-index: 1;
 }
 
 /* ---------- зона пузырей: ровно по воде ---------- */
