@@ -17,14 +17,14 @@
   // fade      -- плавное появление/исчезание в секундах (шум стиралки)
   const UI_SOUNDS = {
     sock: {
-      files: ['sock-rustle.wav'],
-      volume: -14,
+      files: ['freesound_community-cloth-rustling-5-83018.mp3'],
+      volume: 0,
       loop: true,
       move: true,
       sensitivity: 1.5,
     }, // носки на трубе
     fill: {
-      files: ['water-fill.wav'],
+      files: ['tawipop-bubble-sound-effect-1-527144.mp3'],
       volume: -14,
       loop: true,
       move: true,
@@ -32,7 +32,9 @@
       rate: [0.85, 1.35],
     }, // флаконы
     knob: {
-      files: ['knob-creak.wav'],
+      files: [
+        // 'freesound_community-creak-101069.mp3.wav'
+      ],
       volume: -18,
       loop: true,
       move: true,
@@ -45,13 +47,16 @@
       fade: 1,
     }, // шум работающей машины
     curtain: {
-      files: ['curtain-1.wav', 'curtain-2.wav'],
+      files: [
+        'freesound_community-movement-101711.mp3',
+        'freesound_community-movement-101711.mp3',
+      ],
       volume: -12,
       detune: 100,
     }, // выбор осциллятора
-    pause: { files: ['pause-knock.wav'], volume: -14, detune: 100 }, // клик по барабану / Stop
+    pause: { files: ['kick-hard-knock.wav'], volume: -14, detune: 100 }, // клик по барабану / Stop
     tile: {
-      files: ['tile-knock-1.wav', 'tile-knock-2.wav', 'tile-knock-3.wav'],
+      files: ['wood-tap-click.wav', 'wood-tap-click.wav', 'wood-tap-click.wav'],
       volume: -10,
       detune: 150,
     }, // клики по секвенсору
