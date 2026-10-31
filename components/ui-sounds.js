@@ -35,14 +35,14 @@
       files: [
         // 'freesound_community-creak-101069.mp3.wav'
       ],
-      volume: -18,
+      volume: 0,
       loop: true,
       move: true,
       sensitivity: 1,
     }, // ручки
     washer: {
       files: ['freesound_community-washing-machine-soft-60397.mp3'],
-      volume: -22,
+      volume: 0,
       loop: true,
       fade: 1,
     }, // шум работающей машины
@@ -57,7 +57,7 @@
     pause: { files: ['kick-hard-knock.wav'], volume: -14, detune: 100 }, // клик по барабану / Stop
     tile: {
       files: ['wood-tap-click.wav', 'wood-tap-click.wav', 'wood-tap-click.wav'],
-      volume: -10,
+      volume: 0,
       detune: 150,
     }, // клики по секвенсору
   };
@@ -157,9 +157,12 @@
   document
     .querySelectorAll('.OscButton')
     .forEach((b) => b.addEventListener('click', () => hit('curtain')));
-  ['startButton', 'stopButton'].forEach((id) =>
-    document.getElementById(id).addEventListener('click', () => hit('pause'))
-  );
+  // stopButton может быть закомментирован в HTML: без проверки на null скрипт падал
+  // здесь, и всё ниже (шум стиралки, громкость UI) не подключалось
+  ['startButton', 'stopButton'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', () => hit('pause'));
+  });
   document.querySelector('.Sequencer').addEventListener('click', (e) => {
     if (e.target.closest('.ToggleButton')) hit('tile');
   });

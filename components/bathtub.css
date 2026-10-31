@@ -372,4 +372,5 @@
   border-radius: 3cqw;
   /* overflow: hidden; */
   cursor: pointer;
+  z-index: 10;
 }

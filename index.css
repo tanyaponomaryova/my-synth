@@ -43,6 +43,8 @@
 
 body {
   margin: 0;
+  width: 100%;
+  min-height: 100vh;
   background: #1e57c8;
   color: var(--ink);
   font-family: var(--font-label);
@@ -322,7 +324,7 @@ body {
 .BathSynth {
   display: grid;
   grid-template-columns: 1fr 1.97fr 1fr; /* пропорции макета: 460 : 905 : 455 */
-  gap: 2.4%;
+  gap: 2%;
   align-items: start;
   /* max-width: 1280px; */
   /* margin: 0 auto; */

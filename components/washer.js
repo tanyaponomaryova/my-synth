@@ -10,7 +10,8 @@
   const washer = document.querySelector('.Washer');
   const drum = button && button.querySelector('.DrumGlass-drum');
   const foam = button && button.querySelector('.DrumGlass-foam');
-  if (!button || !washer || !drum || !foam) return;
+  // .DrumGlass-foam может быть закомментирован в HTML: тогда крутим барабан без пены
+  if (!button || !washer || !drum) return;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const BUBBLES = 32;
@@ -18,7 +19,7 @@
 
   // пул пузырьков: снаружи включается классом, внутри <i> -- всплывает
   const bubbles = [];
-  for (let n = 0; n < BUBBLES; n++) {
+  for (let n = 0; foam && n < BUBBLES; n++) {
     const b = document.createElement('span');
     b.className = 'Bubble';
     b.style.setProperty('--x', rand(6, 88).toFixed(1) + '%');
@@ -51,7 +52,8 @@
     // --- барабан: 360° за 4 доли => 1.5 * bpm °/с ---
     const motion = reduceMotion.matches ? 0.4 : 1;
     const targetSpeed = playing ? 1.5 * getBpm() * motion : 0;
-    speed += (targetSpeed - speed) * (1 - Math.exp(-(playing ? 2.2 : 0.9) * dt));
+    speed +=
+      (targetSpeed - speed) * (1 - Math.exp(-(playing ? 2.2 : 0.9) * dt));
     angle = (angle + speed * dt) % 360;
     drum.style.transform = `rotate(${angle.toFixed(2)}deg)`;
 
@@ -65,11 +67,12 @@
     }
 
     // --- тряска всего корпуса ---
-    shake += ((playing ? 1 : 0) - shake) * (1 - Math.exp(-(playing ? 4 : 5) * dt));
+    shake +=
+      ((playing ? 1 : 0) - shake) * (1 - Math.exp(-(playing ? 4 : 5) * dt));
     if (reduceMotion.matches || shake < 0.005) {
       washer.style.transform = '';
     } else {
-      const a = washer.offsetWidth * 0.0045 * shake * (0.6 + 0.4 * level);
+      const a = washer.offsetWidth * 0.012 * shake * (0.6 + 0.4 * level);
       const rad = (angle * Math.PI) / 180;
       const t = now / 1000;
       const x = Math.sin(rad) * a * 0.8 + Math.sin(t * 107) * a * 0.35;

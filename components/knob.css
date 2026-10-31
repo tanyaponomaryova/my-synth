@@ -61,8 +61,8 @@
 
 /* Маленькая серая ручка с риской у края (микшер барабанов) */
 .Knob--tick {
-  --knob-bg: #dcdcdc;
-  --knob-mark: #b9b9b9;
+  --knob-bg: #fff;
+  --knob-mark: #e0ddff;
 }
 .Knob--tick .Knob-mark::before {
   left: 44%;

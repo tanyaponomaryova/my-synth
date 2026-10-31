@@ -86,7 +86,10 @@ const globalSettings = {
 };
 
 function initMaster() {
-  master.node = new Tone.Volume(master.volume).toDestination();
+  master.node = new Tone.Volume(master.volume);
+  // лимитер: сумма трёх синтов и драмов легко превышает 0 dBFS -- это и есть цифровой «хруст»
+  master.limiter = new Tone.Limiter(-1).toDestination();
+  master.node.connect(master.limiter);
   master.meter = new Tone.Meter({ smoothing: 0.8 });
   master.node.connect(master.meter);
 }
@@ -107,7 +110,7 @@ function initMasterUI() {
   });
 
   bindSlider('masterVolume', master.volume, (v) => {
-    master.node.volume.value = v;
+    master.node.volume.rampTo(v, 0.05);
   });
 }
 // #endregion Общие настройки микшера
@@ -252,7 +255,7 @@ function initDrumsUI() {
   // громкость каждой дорожки
   Object.values(drums.tracks).forEach((track) => {
     bindSlider(track.sliderId, track.channel.volume, (v) => {
-      track.channel.node.volume.value = v;
+      track.channel.node.volume.rampTo(v, 0.05);
     });
   });
 }
@@ -335,19 +338,23 @@ const synthParams = {
   // общие
   volume: {
     get: (s) => s.channel.volume,
-    set: (s, v) => (s.channel.node.volume.value = v),
+    // rampTo вместо прямой записи: скачок громкости на каждый шаг ручки даёт щелчки
+    set: (s, v) => s.channel.node.volume.rampTo(v, 0.05),
   },
   // tremolo: ползунок = глубина качания громкости
   tremolo: {
     get: (s) => s.amount.tremolo,
-    set: (s, v) => (s.fx.tremolo.depth.value = v),
+    set: (s, v) => s.fx.tremolo.depth.rampTo(v, 0.05),
   },
   // delay: ползунок = feedback (число повторов); на 0 эффект полностью выключен
   delay: {
     get: (s) => s.amount.pingPongDelay,
     set: (s, v) => {
-      s.fx.pingPongDelay.feedback.value = fxRange.delayFeedback(v);
-      s.fx.pingPongDelay.wet.value = v > 0 ? commonFx.pingPongDelay.wet : 0;
+      s.fx.pingPongDelay.feedback.rampTo(fxRange.delayFeedback(v), 0.05);
+      s.fx.pingPongDelay.wet.rampTo(
+        v > 0 ? commonFx.pingPongDelay.wet : 0,
+        0.05
+      );
     },
   },
   // reverb: ползунок = длина хвоста (decay); на 0 эффект полностью выключен.
@@ -356,7 +363,7 @@ const synthParams = {
   reverb: {
     get: (s) => s.amount.reverb,
     set: (s, v) => {
-      s.fx.reverb.wet.value = v > 0 ? commonFx.reverb.wet : 0;
+      s.fx.reverb.wet.rampTo(v > 0 ? commonFx.reverb.wet : 0, 0.05);
       clearTimeout(s.reverbTimer);
       if (v > 0) {
         s.reverbTimer = setTimeout(() => {
@@ -933,7 +940,7 @@ document.addEventListener('DOMContentLoaded', () => {
       transport.pause();
       setPlayButtonText(playButton, false);
     } else {
-      transport.start();
+      transport.start('+0.1'); // небольшой запас, чтобы первые ноты не планировались «в прошлое»
       setPlayButtonText(playButton, true);
     }
   });

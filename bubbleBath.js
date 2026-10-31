@@ -17,18 +17,18 @@ const FALLBACK_HEIGHT = 400;
 const BLEED = 60;
 
 // Сетка
-const SHOW_GRID = true; // false = скрыть сетку
+const SHOW_GRID = false; // false = скрыть сетку
 const GRID_COLOR = [0, 0, 255, 50]; // HSB + alpha (диапазон 0-255)
 
 // Размер пузырьков (диаметр, px)
-const BUBBLE_SIZE_MIN = 15;
+const BUBBLE_SIZE_MIN = 10;
 const BUBBLE_SIZE_MAX = 50;
 
 // Разброс цвета вокруг базового (в единицах HSB 0-255)
-const HUE_SPREAD = 5; // ± к оттенку
+const HUE_SPREAD = 10; // ± к оттенку
 const SAT_SPREAD = 40; // ± к насыщенности
 const BRI_SPREAD = 0; // ± к яркости
-const BASE_SATURATION = 100; // базовая насыщенность
+const BASE_SATURATION = 40; // базовая насыщенность
 const BASE_BRIGHTNESS = 255; // базовая яркость
 const BUBBLE_ALPHA = 255; // прозрачность заливки (0-255)
 
@@ -52,9 +52,9 @@ const ROWS = 2; // количество строк
 // слева направо, сверху вниз, начиная с первой (левой верхней) клетки.
 // const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
 // const notes = ['F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5', 'G5', 'A5'];
-const notes = ['G4', 'A4', 'B4', 'G4', 'A4', 'A4', 'G4', 'B4'];
+const notes = ['G4', 'A4', 'B4', 'G4', 'A4', 'A4', 'G4', 'B4', 'G4', 'B4'];
 // Оттенок (hue) для каждой ноты — в том же порядке, что и notes
-const colores = [130, 130, 130, 130, 130, 170, 210];
+const colores = [150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150];
 
 // Пример сетки 4x3:
 // const COLS = 4;
@@ -66,95 +66,47 @@ const colores = [130, 130, 130, 130, 130, 170, 210];
 // ];
 // const colores = [0, 20, 40, 90, 130, 170, 210, 0, 20, 40, 90, 130];
 
-// ================== ДАННЫЕ ==================
+// ================== ЗВУК ==================
 
-const synth = {
-  synth: {
-    type: 'FMSynth',
-    volume: -8,
-
-    harmonicity: 3.5,
-    modulationIndex: 2.2,
-
-    oscillator: {
-      type: 'sine',
-    },
-
-    modulation: {
-      type: 'sine',
-    },
-
-    envelope: {
-      attack: 0.002,
-      decay: 0.8,
-      sustain: 0.15,
-      release: 1.2,
-    },
-
-    modulationEnvelope: {
-      attack: 0.001,
-      decay: 0.22,
-      sustain: 0,
-      release: 0.08,
-    },
-
-    node: null,
-  },
-
-  filter: {
-    type: 'lowpass',
-    frequency: 4800,
-    rolloff: -12,
-    Q: 0.6,
-    node: null,
-  },
-
-  chorus: {
-    frequency: 0.3,
-    delayTime: 3,
-    depth: 0.08,
-    wet: 0.04,
-    node: null,
-  },
-
-  feedbackDelay: {
-    delayTime: '8n',
-    feedback: 0.12,
-    wet: 0.08,
-    node: null,
-  },
-
-  reverb: {
-    decay: 3.2,
-    preDelay: 0.015,
-    wet: 0.24,
-    node: null,
-  },
-
-  channel: {
-    volume: -10,
-    node: null,
-  },
+// Звук пузырей -- один сэмпл. Положите файл в samples/ и впишите его имя сюда.
+// Сэмпл играет при клике и пока курсор двигается с зажатой кнопкой.
+const BUBBLE_SAMPLE = {
+  baseUrl: 'samples/',
+  file: 'pop-fx_G_major.wav', // <- имя вашего файла
+  note: 'C4', // нота, на которой сэмпл звучит без транспонирования
+  pitchByCell: false, // true = транспонировать по ноте клетки из массива notes
+  volume: -6, // dB
+  interval: 100000, // мс: как часто повторять сэмпл при движении курсора
 };
 
-async function initBathSynth() {
-  synth.synth.node = new Tone.FMSynth(synth.synth);
-  synth.filter.node = new Tone.Filter(synth.filter);
-  synth.chorus.node = new Tone.Chorus(synth.chorus).start();
-  synth.feedbackDelay.node = new Tone.FeedbackDelay(synth.feedbackDelay);
-  synth.reverb.node = new Tone.Reverb(synth.reverb);
-  synth.channel.node = new Tone.Channel(synth.channel);
+const bubbleSound = { sampler: null, channel: null, loaded: false };
+let lastSoundTime = 0;
 
-  await synth.reverb.node.ready;
+function initBathSynth() {
+  bubbleSound.channel = new Tone.Volume(BUBBLE_SAMPLE.volume).toDestination();
+  bubbleSound.sampler = new Tone.Sampler({
+    urls: { [BUBBLE_SAMPLE.note]: BUBBLE_SAMPLE.file },
+    baseUrl: BUBBLE_SAMPLE.baseUrl,
+    onload: () => (bubbleSound.loaded = true),
+    onerror: (err) =>
+      console.warn(
+        '[bubble] не удалось загрузить ' +
+          BUBBLE_SAMPLE.baseUrl +
+          BUBBLE_SAMPLE.file +
+          ' -- положите файл в проект',
+        err
+      ),
+  }).connect(bubbleSound.channel);
+}
 
-  synth.synth.node.chain(
-    synth.filter.node,
-    synth.chorus.node,
-    synth.feedbackDelay.node,
-    synth.reverb.node,
-    synth.channel.node,
-    Tone.Destination
-  );
+function playBubbleSound(noteIdx) {
+  if (!bubbleSound.loaded) return;
+  const note =
+    BUBBLE_SAMPLE.pitchByCell && notes[noteIdx]
+      ? notes[noteIdx]
+      : BUBBLE_SAMPLE.note;
+  bubbleSound.sampler.triggerAttack(note, Tone.now());
+  lastSoundTime = millis();
 }
 
 let container;
@@ -277,7 +229,10 @@ function onDown(e) {
   updatePointer(e);
   isPressed = true;
   lastMoveTime = millis();
-  // Tone.start() нужно вызывать из жеста пользователя
+  Tone.start(); // нужно вызывать из жеста пользователя
+  currentNote = notes[getCellIndex()] || '';
+  playBubbleSound(getCellIndex());
+  // (старый комментарий) Tone.start() нужно вызывать из жеста пользователя
   //   Tone.start().then(() => {
   //     if (DEBUG) console.log('[bubble] AudioContext: ' + Tone.context.state);
   //   });
@@ -293,7 +248,6 @@ function onMove(e) {
 function onUp() {
   isPressed = false;
   currentNote = '';
-  synth.synth.node.triggerRelease();
 }
 
 // ================== DRAW ==================
@@ -310,21 +264,21 @@ function draw() {
 
     if (newNote === undefined) {
       // Пустая клетка (нот меньше, чем клеток): тишина и без пузырьков
-      if (currentNote !== '') {
-        currentNote = '';
-        synth.synth.node.triggerRelease();
-      }
+      currentNote = '';
     } else {
-      // Звук
-      if (newNote !== currentNote) {
+      const now = millis();
+      const moving = now - lastMoveTime < MOVE_TIMEOUT;
+
+      // Звук: при переходе в другую клетку и пока курсор движется
+      if (
+        newNote !== currentNote ||
+        (moving && now - lastSoundTime >= BUBBLE_SAMPLE.interval)
+      ) {
         currentNote = newNote;
-        synth.synth.node.triggerRelease();
-        synth.synth.node.triggerAttack(newNote);
+        playBubbleSound(idx);
       }
 
       // Пузырьки
-      const now = millis();
-      const moving = now - lastMoveTime < MOVE_TIMEOUT;
       if (
         (!SPAWN_ONLY_WHEN_MOVING || moving) &&
         now - lastSpawnTime >= SPAWN_INTERVAL
