@@ -473,95 +473,77 @@ const synth1 = {
   // новая мелодия включается только когда закончится текущий loop.
   // Длина loop (ниже) общая для всех трёх мелодий.
   sequences: [
-    // мелодия 1 (исходная)
+    // мелодия 1: ровные 16-е (1 клетка картинки = 1/16)
     [
-      {
-        time: '0:0:2',
-        noteName: 'G5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '0:1:0',
-        noteName: 'A5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '0:2:0',
-        noteName: 'A5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '0:2:2',
-        noteName: 'A5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '0:3:2',
-        noteName: 'B5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '1:0:0',
-        noteName: 'G5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '1:1:0',
-        noteName: 'A5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '1:2:0',
-        noteName: 'A5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '1:3:0',
-        noteName: 'G5',
-        duration: '8n',
-        velocity: 1,
-      },
-      {
-        time: '1:3:2',
-        noteName: 'B5',
-        duration: '8n',
-        velocity: 1,
-      },
+      { time: '0:0:0', noteName: 'D5', duration: '16n', velocity: 1 },
+      { time: '0:0:1', noteName: 'E5', duration: '16n', velocity: 1 },
+      { time: '0:0:2', noteName: 'F#5', duration: '16n', velocity: 1 },
+      { time: '0:0:3', noteName: 'A5', duration: '16n', velocity: 1 },
+      { time: '0:1:0', noteName: 'A5', duration: '16n', velocity: 1 },
+      { time: '0:1:1', noteName: 'F#5', duration: '16n', velocity: 1 },
+      { time: '0:1:2', noteName: 'B5', duration: '16n', velocity: 1 },
+      { time: '0:1:3', noteName: 'D5', duration: '16n', velocity: 1 },
+      { time: '0:2:0', noteName: 'F#5', duration: '16n', velocity: 1 },
+      { time: '0:2:1', noteName: 'E5', duration: '8n', velocity: 1 },
+      { time: '0:2:3', noteName: 'D5', duration: '16n', velocity: 1 },
+      { time: '0:3:0', noteName: 'B4', duration: '16n', velocity: 1 },
+      { time: '0:3:1', noteName: 'A4', duration: '8n.', velocity: 1 },
+
+      { time: '1:0:0', noteName: 'D5', duration: '16n', velocity: 1 },
+      { time: '1:0:1', noteName: 'D5', duration: '16n', velocity: 1 },
+      { time: '1:0:2', noteName: 'F#5', duration: '16n', velocity: 1 },
+      { time: '1:0:3', noteName: 'A5', duration: '16n', velocity: 1 },
+      { time: '1:1:0', noteName: 'A5', duration: '16n', velocity: 1 },
+      { time: '1:1:1', noteName: 'F#5', duration: '16n', velocity: 1 },
+      { time: '1:1:2', noteName: 'E5', duration: '16n', velocity: 1 },
+      { time: '1:1:3', noteName: 'D5', duration: '16n', velocity: 1 },
+      { time: '1:2:0', noteName: 'B4', duration: '16n', velocity: 1 },
+      { time: '1:2:1', noteName: 'E5', duration: '4n.', velocity: 1 },
     ],
-    // мелодия 2: спокойная, редкие ноты
+    // мелодия 2: секстоли (1 клетка = 1/12 доли), строка = такт
     [
-      { time: '0:0:0', noteName: 'B5', duration: '4n', velocity: 1 },
-      { time: '0:1:2', noteName: 'A5', duration: '8n', velocity: 1 },
-      { time: '0:2:2', noteName: 'G5', duration: '4n', velocity: 1 },
-      { time: '1:0:0', noteName: 'A5', duration: '8n', velocity: 1 },
-      { time: '1:1:0', noteName: 'B5', duration: '4n', velocity: 1 },
-      { time: '1:2:0', noteName: 'G5', duration: '8n', velocity: 1 },
-      { time: '1:3:0', noteName: 'A5', duration: '4n', velocity: 1 },
+      { time: '0:0:0', noteName: 'F#5', duration: '16t', velocity: 1 },
+      { time: '0:0:0.667', noteName: 'E5', duration: '16t', velocity: 1 },
+      { time: '0:0:1.333', noteName: 'D5', duration: '16t', velocity: 1 },
+      { time: '0:0:2', noteName: 'E5', duration: '16n', velocity: 1 },
+      { time: '0:0:3', noteName: 'D5', duration: '16t', velocity: 1 },
+      { time: '0:0:3.667', noteName: 'B5', duration: '8n', velocity: 1 },
+      { time: '0:1:1.667', noteName: 'C#5', duration: '8n', velocity: 1 },
+      { time: '0:1:3.667', noteName: 'B4', duration: '8t', velocity: 1 },
+      { time: '0:2:1', noteName: 'F5', duration: '16t', velocity: 1 },
+      { time: '0:2:1.667', noteName: 'F6', duration: '16t', velocity: 1 },
+      { time: '0:2:2.333', noteName: 'E5', duration: '16t', velocity: 1 },
+      { time: '0:2:3', noteName: 'D5', duration: '16t', velocity: 1 },
+      { time: '0:2:3.667', noteName: 'E5', duration: '16n', velocity: 1 },
+      { time: '0:3:0.667', noteName: 'D5', duration: '16t', velocity: 1 },
+      { time: '0:3:1.333', noteName: 'B5', duration: '8t', velocity: 1 },
+
+      { time: '1:0:0', noteName: 'F#5', duration: '16t', velocity: 1 },
+      { time: '1:0:0.667', noteName: 'E5', duration: '16t', velocity: 1 },
+      { time: '1:0:1.333', noteName: 'D5', duration: '16t', velocity: 1 },
+      { time: '1:0:2', noteName: 'E5', duration: '16n', velocity: 1 },
+      { time: '1:0:3', noteName: 'D5', duration: '16t', velocity: 1 },
+      { time: '1:0:3.667', noteName: 'A5', duration: '8t', velocity: 1 },
+      { time: '1:1:1', noteName: 'B5', duration: '16t', velocity: 1 },
+      { time: '1:1:1.667', noteName: 'A5', duration: '0:0:3.333', velocity: 1 },
     ],
-    // мелодия 3: оживлённая, восьмыми
+    // мелодия 3: квинтоли (1 клетка = 1/5 доли), строка = такт
     [
-      { time: '0:0:0', noteName: 'G5', duration: '8n', velocity: 1 },
-      { time: '0:0:2', noteName: 'A5', duration: '8n', velocity: 1 },
-      { time: '0:1:0', noteName: 'B5', duration: '8n', velocity: 1 },
-      { time: '0:1:2', noteName: 'A5', duration: '8n', velocity: 1 },
-      { time: '0:2:0', noteName: 'G5', duration: '8n', velocity: 1 },
-      { time: '0:2:2', noteName: 'A5', duration: '8n', velocity: 1 },
-      { time: '0:3:0', noteName: 'B5', duration: '8n', velocity: 1 },
-      { time: '0:3:2', noteName: 'B5', duration: '8n', velocity: 1 },
-      { time: '1:0:0', noteName: 'A5', duration: '8n', velocity: 1 },
-      { time: '1:0:2', noteName: 'G5', duration: '8n', velocity: 1 },
-      { time: '1:1:0', noteName: 'A5', duration: '8n', velocity: 1 },
-      { time: '1:2:0', noteName: 'B5', duration: '8n', velocity: 1 },
-      { time: '1:2:2', noteName: 'A5', duration: '8n', velocity: 1 },
-      { time: '1:3:0', noteName: 'G5', duration: '8n', velocity: 1 },
+      { time: '0:0:0', noteName: 'E5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:0:0.8', noteName: 'G#5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:0:1.6', noteName: 'B5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:0:2.4', noteName: 'B5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:0:3.2', noteName: 'B5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:1:0', noteName: 'B5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:1:0.8', noteName: 'A5', duration: '0:0:3.2', velocity: 1 },
+      { time: '0:2:0', noteName: 'F#5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:2:0.8', noteName: 'F#5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:2:1.6', noteName: 'E5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:2:2.4', noteName: 'E5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:2:3.2', noteName: 'E5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:3:0', noteName: 'F#5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:3:0.8', noteName: 'F#5', duration: '0:0:0.8', velocity: 1 },
+      { time: '0:3:1.6', noteName: 'E5', duration: '0:0:2.4', velocity: 1 },
     ],
   ],
   loop: '2m',
@@ -645,65 +627,57 @@ const synth2 = {
   // новая мелодия включается только когда закончится текущий loop.
   // Длина loop (ниже) общая для всех трёх мелодий.
   sequences: [
-    // мелодия 1 (исходная)
+    // мелодия 1: к мелодии 1 synth 1, D | D→A, ритм 3+3+2 (тресильо)
     [
-      // Такт 1
-      {
-        time: '0:0:0',
-        noteName: 'G3',
-        duration: '2n',
-        velocity: 0.35,
-      },
-      {
-        time: '0:2:0',
-        noteName: 'D4',
-        duration: '4n',
-        velocity: 0.25,
-      },
-      {
-        time: '0:3:0',
-        noteName: 'G4',
-        duration: '4n',
-        velocity: 0.3,
-      },
+      { time: '0:0:0', noteName: 'D4', duration: '8n', velocity: 0.5 },
+      { time: '0:0:3', noteName: 'F#4', duration: '8n', velocity: 0.35 },
+      { time: '0:1:2', noteName: 'A4', duration: '8n', velocity: 0.4 },
+      { time: '0:2:0', noteName: 'B4', duration: '8n', velocity: 0.45 },
+      { time: '0:2:3', noteName: 'A4', duration: '8n', velocity: 0.35 },
+      { time: '0:3:2', noteName: 'F#4', duration: '8n', velocity: 0.3 },
 
-      // Такт 2
-      {
-        time: '1:0:0',
-        noteName: 'E3',
-        duration: '2n',
-        velocity: 0.35,
-      },
-      {
-        time: '1:2:0',
-        noteName: 'B3',
-        duration: '4n',
-        velocity: 0.25,
-      },
-      {
-        time: '1:3:0',
-        noteName: 'E4',
-        duration: '4n',
-        velocity: 0.3,
-      },
+      { time: '1:0:0', noteName: 'D4', duration: '8n', velocity: 0.5 },
+      { time: '1:0:3', noteName: 'F#4', duration: '8n', velocity: 0.35 },
+      { time: '1:1:2', noteName: 'A4', duration: '8n', velocity: 0.4 },
+      { time: '1:2:0', noteName: 'E4', duration: '8n', velocity: 0.45 },
+      { time: '1:2:3', noteName: 'A4', duration: '8n', velocity: 0.35 },
+      { time: '1:3:2', noteName: 'C#5', duration: '8n', velocity: 0.3 },
     ],
-    // мелодия 2: C -> D
+    // мелодия 2: к мелодии 2 synth 1, Bm | D→A, ритм 3+3+3+3+2+2
     [
-      { time: '0:0:0', noteName: 'C3', duration: '2n', velocity: 0.35 },
-      { time: '0:2:0', noteName: 'G3', duration: '4n', velocity: 0.25 },
-      { time: '0:3:0', noteName: 'C4', duration: '4n', velocity: 0.3 },
-      { time: '1:0:0', noteName: 'D3', duration: '2n', velocity: 0.35 },
-      { time: '1:2:0', noteName: 'A3', duration: '4n', velocity: 0.25 },
-      { time: '1:3:0', noteName: 'D4', duration: '4n', velocity: 0.3 },
+      { time: '0:0:0', noteName: 'B3', duration: '8n', velocity: 0.5 },
+      { time: '0:0:3', noteName: 'F#4', duration: '8n', velocity: 0.35 },
+      { time: '0:1:2', noteName: 'D4', duration: '8n', velocity: 0.4 },
+      { time: '0:2:1', noteName: 'A4', duration: '8n', velocity: 0.35 },
+      { time: '0:3:0', noteName: 'F#4', duration: '8n', velocity: 0.4 },
+      { time: '0:3:2', noteName: 'D4', duration: '8n', velocity: 0.3 },
+
+      { time: '1:0:0', noteName: 'D4', duration: '8n', velocity: 0.5 },
+      { time: '1:0:3', noteName: 'A4', duration: '8n', velocity: 0.35 },
+      { time: '1:1:2', noteName: 'F#4', duration: '8n', velocity: 0.4 },
+      { time: '1:2:1', noteName: 'E4', duration: '8n', velocity: 0.4 },
+      { time: '1:3:0', noteName: 'A4', duration: '8n', velocity: 0.35 },
+      { time: '1:3:2', noteName: 'C#5', duration: '8n', velocity: 0.3 },
     ],
-    // мелодия 3: Am -> D
+    // мелодия 3: к мелодии 3 synth 1, E | A→B, синкопы
     [
-      { time: '0:0:0', noteName: 'A3', duration: '2n', velocity: 0.35 },
-      { time: '0:2:0', noteName: 'E4', duration: '4n', velocity: 0.25 },
-      { time: '0:3:0', noteName: 'A4', duration: '4n', velocity: 0.3 },
-      { time: '1:0:0', noteName: 'D3', duration: '2n', velocity: 0.35 },
-      { time: '1:2:0', noteName: 'A3', duration: '4n', velocity: 0.25 },
-      { time: '1:3:0', noteName: 'D4', duration: '4n', velocity: 0.3 },
+      { time: '0:0:0', noteName: 'E4', duration: '8n', velocity: 0.5 },
+      { time: '0:0:2', noteName: 'G#4', duration: '8n', velocity: 0.35 },
+      { time: '0:0:3', noteName: 'B4', duration: '8n', velocity: 0.4 },
+      { time: '0:1:2', noteName: 'G#4', duration: '8n', velocity: 0.35 },
+      { time: '0:2:0', noteName: 'F#4', duration: '8n', velocity: 0.45 },
+      { time: '0:2:2', noteName: 'G#4', duration: '8n', velocity: 0.35 },
+      { time: '0:2:3', noteName: 'B4', duration: '8n', velocity: 0.4 },
+      { time: '0:3:2', noteName: 'A4', duration: '8n', velocity: 0.3 },
+
+      { time: '1:0:0', noteName: 'C#4', duration: '8n', velocity: 0.5 },
+      { time: '1:0:2', noteName: 'E4', duration: '8n', velocity: 0.35 },
+      { time: '1:0:3', noteName: 'A4', duration: '8n', velocity: 0.4 },
+      { time: '1:1:2', noteName: 'E4', duration: '8n', velocity: 0.35 },
+      { time: '1:2:0', noteName: 'B3', duration: '8n', velocity: 0.45 },
+      { time: '1:2:2', noteName: 'E4', duration: '8n', velocity: 0.35 },
+      { time: '1:2:3', noteName: 'F#4', duration: '8n', velocity: 0.4 },
+      { time: '1:3:2', noteName: 'B4', duration: '8n', velocity: 0.3 },
     ],
   ],
   loop: '2m',
@@ -732,75 +706,38 @@ async function initSynth2() {
 // #endregion SYNTH 2
 
 // #region SYNTH 3
+// Низкий заполняющий голос: тёплая треугольная волна + фильтр, который
+// чуть приоткрывается на каждой ноте. Играет в октаве E2–D3 под мелодиями
+// synth 1 и synth 2 (гармония: D, Bm, E / A, B).
 const synth3 = {
-  // Основной звук — мелодия
   synth: {
-    harmonicity: 3.99,
-    modulationIndex: 1.5,
     oscillator: {
-      type: 'sine',
+      type: 'triangle',
     },
     envelope: {
-      attack: 0.02,
-      decay: 0.8,
-      sustain: 0.15,
-      release: 1.0,
+      attack: 0.06,
+      decay: 0.5,
+      sustain: 0.55,
+      release: 1.2,
     },
-    modulation: {
-      type: 'sine',
+    filter: {
+      type: 'lowpass',
+      rolloff: -24,
+      Q: 1,
     },
-    modulationEnvelope: {
-      attack: 0.01,
-      decay: 0.15,
-      sustain: 0,
-      release: 0.2,
+    filterEnvelope: {
+      attack: 0.1,
+      decay: 0.6,
+      sustain: 0.35,
+      release: 1.2,
+      baseFrequency: 140, // Гц: фильтр закрыт почти до баса
+      octaves: 2.6, // ...и открывается примерно до 850 Гц
     },
+    portamento: 0.04, // лёгкое скольжение между нотами
     node: null,
   },
 
-  // Фильтр мелодии — сохраняем читаемость нот
-  bandpass: {
-    type: 'bandpass',
-    frequency: 440,
-    Q: 1.2,
-    rolloff: -12,
-    node: null,
-  },
-
-  // Мягкий верхний срез
-  lowpass: {
-    type: 'lowpass',
-    frequency: 2200,
-    Q: 0.4,
-    rolloff: -24,
-    node: null,
-  },
-
-  chorus: {
-    frequency: 0.5,
-    delayTime: 18,
-    depth: 0.35,
-    wet: 0.2,
-    node: null,
-  },
-
-  // Фоновый розовый шум моря
-  seaNoise: {
-    type: 'pink',
-    volume: -10, // dB: тихий, но различимый фон
-    node: null,
-    gain: null,
-  },
-
-  // Медленное изменение фильтра шума
-  filterLfo: {
-    frequency: 0.035,
-    min: 500,
-    max: 1100,
-    node: null,
-  },
-
-  // Общие эффекты
+  // Общие эффекты (стартовое положение ползунков)
   amount: {
     tremolo: 0.2,
     pingPongDelay: 0,
@@ -813,58 +750,64 @@ const synth3 = {
     node: null,
   },
 
-  glide: 0.08,
-
-  // Три мелодии одного синта. Выбираются радио-кнопками под ручкой громкости;
-  // новая мелодия включается только когда закончится текущий loop.
+  // Три мелодии одного синта (по 4 такта). Выбираются радио-кнопками под ручкой
+  // громкости; новая мелодия включается только когда закончится текущий loop.
   // Длина loop (ниже) общая для всех трёх мелодий.
   sequences: [
-    // мелодия 1 (исходная)
+    // мелодия 1: D | D→A | D | D→A (под мелодию 1)
     [
-      { time: '0:0:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
-      { time: '0:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
-      { time: '0:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+      { time: '0:0:0', noteName: 'D2', duration: '2n', velocity: 0.9 },
+      { time: '0:2:0', noteName: 'F#2', duration: '4n', velocity: 0.9 },
+      { time: '0:3:0', noteName: 'A2', duration: '4n', velocity: 0.9 },
 
-      { time: '1:0:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
-      { time: '1:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
-      { time: '1:2:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
-      { time: '1:3:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
+      { time: '1:0:0', noteName: 'D2', duration: '4n', velocity: 0.9 },
+      { time: '1:1:0', noteName: 'F#2', duration: '4n', velocity: 0.9 },
+      { time: '1:2:0', noteName: 'A2', duration: '2n', velocity: 0.9 },
 
-      { time: '2:0:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
-      { time: '2:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
-      { time: '2:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+      { time: '2:0:0', noteName: 'D2', duration: '2n', velocity: 0.9 },
+      { time: '2:2:0', noteName: 'E2', duration: '4n', velocity: 0.9 },
+      { time: '2:3:0', noteName: 'F#2', duration: '4n', velocity: 0.9 },
 
-      { time: '3:0:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
-      { time: '3:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
-      { time: '3:2:0', noteName: 'C3', duration: '4n', velocity: 0.9 },
-      { time: '3:3:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
+      { time: '3:0:0', noteName: 'D2', duration: '4n', velocity: 0.9 },
+      { time: '3:1:0', noteName: 'A2', duration: '4n', velocity: 0.9 },
+      { time: '3:2:0', noteName: 'E2', duration: '4n', velocity: 0.9 },
+      { time: '3:3:0', noteName: 'C#3', duration: '4n', velocity: 0.9 },
     ],
-    // мелодия 2: плавная волна
+    // мелодия 2: Bm | D→A | Bm | D→A (под мелодию 2)
     [
-      { time: '0:0:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
-      { time: '0:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
-      { time: '0:2:0', noteName: 'A3', duration: '2n', velocity: 0.9 },
-      { time: '1:0:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
-      { time: '1:1:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
-      { time: '1:2:0', noteName: 'D3', duration: '2n', velocity: 0.9 },
-      { time: '2:0:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
-      { time: '2:1:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
-      { time: '2:2:0', noteName: 'A3', duration: '4n', velocity: 0.9 },
-      { time: '2:3:0', noteName: 'G3', duration: '4n', velocity: 0.9 },
-      { time: '3:0:0', noteName: 'E3', duration: '4n', velocity: 0.9 },
-      { time: '3:1:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
-      { time: '3:2:0', noteName: 'C3', duration: '2n', velocity: 0.9 },
+      { time: '0:0:0', noteName: 'B2', duration: '2n', velocity: 0.9 },
+      { time: '0:2:0', noteName: 'D3', duration: '4n', velocity: 0.9 },
+      { time: '0:3:0', noteName: 'F#2', duration: '4n', velocity: 0.9 },
+
+      { time: '1:0:0', noteName: 'D2', duration: '2n', velocity: 0.9 },
+      { time: '1:2:0', noteName: 'A2', duration: '4n', velocity: 0.9 },
+      { time: '1:3:0', noteName: 'B2', duration: '4n', velocity: 0.9 },
+
+      { time: '2:0:0', noteName: 'B2', duration: '4n', velocity: 0.9 },
+      { time: '2:1:0', noteName: 'A2', duration: '4n', velocity: 0.9 },
+      { time: '2:2:0', noteName: 'F#2', duration: '4n', velocity: 0.9 },
+      { time: '2:3:0', noteName: 'D2', duration: '4n', velocity: 0.9 },
+
+      { time: '3:0:0', noteName: 'D2', duration: '2n', velocity: 0.9 },
+      { time: '3:2:0', noteName: 'A2', duration: '2n', velocity: 0.9 },
     ],
-    // мелодия 3: медленная, длинные ноты
+    // мелодия 3: E | A→B | E | A→B (под мелодию 3)
     [
-      { time: '0:0:0', noteName: 'C3', duration: '2n', velocity: 0.9 },
-      { time: '0:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
-      { time: '1:0:0', noteName: 'D3', duration: '2n', velocity: 0.9 },
-      { time: '1:2:0', noteName: 'A3', duration: '2n', velocity: 0.9 },
-      { time: '2:0:0', noteName: 'G3', duration: '2n', velocity: 0.9 },
-      { time: '2:2:0', noteName: 'E3', duration: '2n', velocity: 0.9 },
-      { time: '3:0:0', noteName: 'D3', duration: '2n', velocity: 0.9 },
-      { time: '3:2:0', noteName: 'C3', duration: '2n', velocity: 0.9 },
+      { time: '0:0:0', noteName: 'E2', duration: '2n', velocity: 0.9 },
+      { time: '0:2:0', noteName: 'G#2', duration: '4n', velocity: 0.9 },
+      { time: '0:3:0', noteName: 'B2', duration: '4n', velocity: 0.9 },
+
+      { time: '1:0:0', noteName: 'A2', duration: '2n', velocity: 0.9 },
+      { time: '1:2:0', noteName: 'B2', duration: '2n', velocity: 0.9 },
+
+      { time: '2:0:0', noteName: 'E2', duration: '4n', velocity: 0.9 },
+      { time: '2:1:0', noteName: 'F#2', duration: '4n', velocity: 0.9 },
+      { time: '2:2:0', noteName: 'G#2', duration: '4n', velocity: 0.9 },
+      { time: '2:3:0', noteName: 'B2', duration: '4n', velocity: 0.9 },
+
+      { time: '3:0:0', noteName: 'A2', duration: '4n', velocity: 0.9 },
+      { time: '3:1:0', noteName: 'C#3', duration: '4n', velocity: 0.9 },
+      { time: '3:2:0', noteName: 'B2', duration: '2n', velocity: 0.9 },
     ],
   ],
 
@@ -872,50 +815,11 @@ const synth3 = {
 };
 
 async function initSynth3() {
-  synth3.synth.node = new Tone.FMSynth(synth3.synth);
+  synth3.synth.node = new Tone.MonoSynth(synth3.synth);
 
-  synth3.bandpass.node = new Tone.Filter(synth3.bandpass);
-  synth3.lowpass.node = new Tone.Filter(synth3.lowpass);
-  synth3.chorus.node = new Tone.Chorus(synth3.chorus).start();
+  // общая часть: tremolo -> pingPongDelay -> reverb -> channel -> master
+  await connectCommonFx(synth3, synth3.synth.node);
 
-  // Цепочка мелодии
-  synth3.synth.node.chain(
-    synth3.bandpass.node,
-    synth3.lowpass.node,
-    synth3.chorus.node
-  );
-
-  // Розовый шум моря
-  synth3.seaNoise.node = new Tone.Noise('pink');
-
-  // ВАЖНО: Gain принимает линейную громкость, а не dB
-  const noiseLinearGain = Math.pow(10, synth3.seaNoise.volume / 20);
-
-  synth3.seaNoise.gain = new Tone.Gain(noiseLinearGain);
-
-  synth3.seaNoise.node.connect(synth3.seaNoise.gain);
-
-  // Шум проходит через фильтр, но не через фильтр мелодии
-  synth3.seaNoise.gain.connect(synth3.lowpass.node);
-
-  synth3.seaNoise.node.start();
-
-  // Плавное движение фильтра — эффект морских волн
-  synth3.filterLfo.node = new Tone.LFO({
-    frequency: synth3.filterLfo.frequency,
-    min: synth3.filterLfo.min,
-    max: synth3.filterLfo.max,
-    type: 'sine',
-  });
-
-  synth3.filterLfo.node.connect(synth3.lowpass.node.frequency);
-
-  synth3.filterLfo.node.start();
-
-  // Общие эффекты проекта
-  await connectCommonFx(synth3, synth3.chorus.node);
-
-  // Запуск мелодии
   startPart(synth3, (time, note) => {
     synth3.synth.node.triggerAttackRelease(
       note.noteName,

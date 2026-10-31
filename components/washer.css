@@ -75,9 +75,10 @@
 /* иконка: по умолчанию ▶ (на паузе), при .is-playing -- две полоски ⏸ */
 .DrumButton-icon {
   position: relative;
-  width: 10.6cqw;
-  height: 12.7cqw;
-  margin-left: 1.2cqw; /* оптическое выравнивание треугольника */
+  /* окно барабана = 73% кнопки (64.7cqw), значок занимает ~40% окна */
+  height: 18.9cqw;
+  width: 15.8cqw;
+  margin-left: 1.9cqw; /* оптическое выравнивание треугольника */
   background: #d9d9d9;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
@@ -94,7 +95,7 @@
   top: 0;
   bottom: 0;
   width: 44%;
-  border-radius: 1.5cqw;
+  border-radius: 2.2cqw;
   background: #d9d9d9;
 }
 .DrumButton-icon::before {

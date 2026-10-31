@@ -11,6 +11,11 @@ const DEBUG = false;
 const FALLBACK_WIDTH = 600;
 const FALLBACK_HEIGHT = 400;
 
+// Холст больше зоны на BLEED px с каждой стороны, чтобы пузырьки у края
+// не обрезались. Должен быть >= радиус самого большого пузыря при лопании
+// (BUBBLE_SIZE_MAX * 1.3 / 2) + POSITION_SPREAD.
+const BLEED = 60;
+
 // Сетка
 const SHOW_GRID = true; // false = скрыть сетку
 const GRID_COLOR = [0, 0, 255, 50]; // HSB + alpha (диапазон 0-255)
@@ -154,6 +159,7 @@ async function initBathSynth() {
 
 let container;
 let cellW, cellH;
+let zoneW, zoneH; // размер зоны без полей (width/height у p5 -- размер холста с полями)
 let isPressed = false;
 let pointerX = 0,
   pointerY = 0;
@@ -202,13 +208,16 @@ function setup() {
     );
   }
 
-  const cnv = createCanvas(w, h);
+  zoneW = w;
+  zoneH = h;
+  const cnv = createCanvas(w + BLEED * 2, h + BLEED * 2);
   cnv.parent(container);
   const el = cnv.elt;
   el.style.position = 'absolute';
-  el.style.top = '0';
-  el.style.left = '0';
-  el.style.touchAction = 'none'; // чтобы палец не скроллил страницу
+  el.style.top = -BLEED + 'px';
+  el.style.left = -BLEED + 'px';
+  el.style.pointerEvents = 'none'; // события ловит сам контейнер, поля холста не кликабельны
+  container.style.touchAction = 'none'; // чтобы палец не скроллил страницу
   if (DEBUG) {
     el.style.outline = '2px solid red';
     console.log(
@@ -223,24 +232,28 @@ function setup() {
   initBathSynth();
 
   // Свои события на самом холсте: работает только внутри элемента
-  el.addEventListener('pointerdown', onDown);
-  el.addEventListener('pointermove', onMove);
-  el.addEventListener('pointerup', onUp);
-  el.addEventListener('pointercancel', onUp);
+  container.addEventListener('pointerdown', onDown);
+  container.addEventListener('pointermove', onMove);
+  container.addEventListener('pointerup', onUp);
+  container.addEventListener('pointercancel', onUp);
 
   // Подгоняем холст под размер div, если он меняется
   new ResizeObserver(() => {
     const nw = container.clientWidth;
     const nh = container.clientHeight;
     if (!nw || !nh) return;
-    resizeCanvas(nw, nh);
+    zoneW = nw;
+    zoneH = nh;
+    resizeCanvas(nw + BLEED * 2, nh + BLEED * 2);
+    el.style.top = -BLEED + 'px';
+    el.style.left = -BLEED + 'px';
     updateGridSize();
   }).observe(container);
 }
 
 function updateGridSize() {
-  cellW = width / COLS;
-  cellH = height / ROWS;
+  cellW = zoneW / COLS;
+  cellH = zoneH / ROWS;
 }
 
 // Индекс ноты в массиве notes для текущей позиции указателя
@@ -253,13 +266,14 @@ function getCellIndex() {
 // ================== СОБЫТИЯ ==================
 
 function updatePointer(e) {
-  const r = e.target.getBoundingClientRect();
-  pointerX = e.clientX - r.left;
-  pointerY = e.clientY - r.top;
+  const r = container.getBoundingClientRect();
+  // курсор, «пойманный» за пределами зоны, прижимаем к её краю
+  pointerX = constrain(e.clientX - r.left, 0, zoneW);
+  pointerY = constrain(e.clientY - r.top, 0, zoneH);
 }
 
 function onDown(e) {
-  e.target.setPointerCapture(e.pointerId);
+  container.setPointerCapture(e.pointerId);
   updatePointer(e);
   isPressed = true;
   lastMoveTime = millis();
@@ -286,6 +300,7 @@ function onUp() {
 
 function draw() {
   clear(); // прозрачный фон, видны только живые пузырьки
+  translate(BLEED, BLEED); // дальше координаты считаются от угла зоны, а не холста
 
   if (SHOW_GRID) drawGrid();
 
@@ -327,8 +342,8 @@ function drawGrid() {
   push();
   stroke(...GRID_COLOR);
   strokeWeight(1);
-  for (let i = 1; i < COLS; i++) line(cellW * i, 0, cellW * i, height);
-  for (let j = 1; j < ROWS; j++) line(0, cellH * j, width, cellH * j);
+  for (let i = 1; i < COLS; i++) line(cellW * i, 0, cellW * i, zoneH);
+  for (let j = 1; j < ROWS; j++) line(0, cellH * j, zoneW, cellH * j);
   pop();
 }
 

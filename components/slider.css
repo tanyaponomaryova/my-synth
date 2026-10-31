@@ -1,5 +1,10 @@
 /* ============ Slider: горизонтальный ползунок (BPM, VOLUME, UI) ============ */
-/* Ползунок -- носок (SVG в data-URI). Размеры в cqw: 1cqw = 1% ширины .TowelRail. */
+/* Ползунок -- носок (SVG из img/). Размеры в cqw: 1cqw = 1% ширины .TowelRail.
+   ВАЖНО: ширина thumb должна равняться ВИДИМОЙ ширине носка. Нативный ползунок
+   ходит по треку только на (ширина трека - ширина thumb), поэтому лишние
+   прозрачные поля в thumb или в самом SVG «съедают» ход ползунка.
+   viewBox у sock-volume.svg и sock-ui-volume.svg обрезан по границам носка,
+   а --slider-thumb-width = --slider-thumb-size * (ширина viewBox / высота viewBox). */
 .Slider {
   --slider-height: 3cqw;
   --slider-thumb-size: 13cqw;
@@ -14,8 +19,8 @@
 
 #bpmSlider {
   --sock: url('../img/sock-bpm.svg');
-  --slider-thumb-size: 40cqw;
-  --slider-thumb-width: 30cqw;
+  --slider-thumb-size: 40cqw; /* 145 x 226 */
+  --slider-thumb-width: 25.7cqw;
 
   --thumb-offset-y: 0cqw;
 
@@ -26,8 +31,9 @@
 
 #masterVolume {
   --sock: url('../img/sock-volume.svg');
-  --slider-thumb-size: 45cqw;
-  --slider-thumb-width: 50cqw;
+  --slider-thumb-size: 39.8cqw; /* 112 x 230 (обрезан по носку) */
+  --slider-thumb-width: 19.4cqw;
+  --hang: -0.005;
 
   --thumb-offset-y: 0cqw;
 
@@ -36,8 +42,9 @@
 
 #uiVolume {
   --sock: url('../img/sock-ui-volume.svg');
-  --slider-thumb-size: 50cqw;
-  --slider-thumb-width: 50cqw;
+  --slider-thumb-size: 37.4cqw; /* 303.5 x 228 (обрезан по носку) */
+  --slider-thumb-width: 49.8cqw;
+  --hang: -0.062;
 
   --thumb-offset-y: 0cqw;
 

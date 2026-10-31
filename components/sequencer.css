@@ -2,6 +2,11 @@
 .Drums {
   width: 100%;
   container-type: inline-size;
+  /* отдельная плашка-фон под весь драм-сэмплер */
+  padding: 2.2%;
+  background: #fff;
+  border: 0.2vw solid var(--grey-200);
+  border-radius: 2vw;
 }
 
 .Drums-title {
